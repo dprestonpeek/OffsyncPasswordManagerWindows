@@ -20,6 +20,11 @@ namespace OffSyncPasswordManager
             PopulateCredentials();
         }
 
+        /// <summary>
+        /// Clicking the "Add Credential" button. Encrypts and stores the info and password entered.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EncryptButton_Click(object sender, EventArgs e)
         {
             if (Master.KeyDataNotEmpty())
@@ -33,16 +38,25 @@ namespace OffSyncPasswordManager
             }
         }
 
+        /// <summary>
+        /// Clicking the "Copy Password" button. Decrypts and copies the password to clipboard.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DecryptButton_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(DecryptPassword());
         }
 
+        /// <summary>
+        /// Returns the selected password in decrypted format.
+        /// </summary>
+        /// <returns></returns>
         private string DecryptPassword()
         {
             if (Master.KeyDataNotEmpty())
             {
-                File.Decrypt("encryptedPasswords.txt");
+                //File.Decrypt("encryptedPasswords.txt");
                 string[] storedData = File.ReadAllLines("encryptedPasswords.txt");
                 //File.Encrypt("encryptedPasswords.txt");
                 string[] split = storedData[Usernames.SelectedIndex].Split('|');
@@ -54,6 +68,9 @@ namespace OffSyncPasswordManager
             return "";
         }
 
+        /// <summary>
+        /// Read passwords and info from file and populate fields in-app.
+        /// </summary>
         private void PopulateCredentials()
         {
             if (Master.KeyDataNotEmpty())
@@ -72,6 +89,10 @@ namespace OffSyncPasswordManager
             }
         }
 
+        /// <summary>
+        /// Encrypts and adds the password to credentials list.
+        /// </summary>
+        /// <param name="encryptedPasswordAndAuthKey"></param>
         private void AddCredential(string encryptedPasswordAndAuthKey)
         {
             string[] split = encryptedPasswordAndAuthKey.Split('|');
