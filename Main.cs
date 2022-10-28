@@ -56,9 +56,7 @@ namespace OffSyncPasswordManager
         {
             if (Master.KeyDataNotEmpty())
             {
-                //File.Decrypt("encryptedPasswords.txt");
                 string[] storedData = File.ReadAllLines("encryptedPasswords.txt");
-                //File.Encrypt("encryptedPasswords.txt");
                 string[] split = storedData[Usernames.SelectedIndex].Split('|');
                 string encryptedPassword = split[2];
                 string authKey = split[3];
@@ -75,9 +73,7 @@ namespace OffSyncPasswordManager
         {
             if (Master.KeyDataNotEmpty())
             {
-                //File.Decrypt("encryptedPasswords.txt");
                 string[] storedData = File.ReadAllLines("encryptedPasswords.txt");
-                //File.Encrypt("encryptedPasswords.txt");
                 Credentials.Clear();
                 Credentials.AddRange(storedData);
                 foreach (string line in storedData)
@@ -102,11 +98,9 @@ namespace OffSyncPasswordManager
             CredDescriptions.Items.Add(CredDesc.Text);
             Usernames.Items.Add(Username.Text);
 
-            //File.Decrypt("encryptedPasswords.txt");
             string[] items = new string[Credentials.Count];
             Credentials.CopyTo(items, 0);
             File.WriteAllLines("encryptedPasswords.txt", items);
-            //File.Encrypt("encryptedPasswords.txt");
         }
 
         private void confrimToolStripMenuItem_Click(object sender, EventArgs e)
@@ -142,9 +136,7 @@ namespace OffSyncPasswordManager
             {
                 if (Master.KeyDataNotEmpty())
                 {
-                    //File.Decrypt("encryptedPasswords.txt");
                     string[] storedData = File.ReadAllLines("encryptedPasswords.txt");
-                    //File.Encrypt("encryptedPasswords.txt");
                     Credentials.Clear();
                     Credentials.AddRange(storedData);
                     foreach (string line in storedData)
@@ -190,9 +182,7 @@ namespace OffSyncPasswordManager
                 Credentials.Clear();
                 CredDescriptions.Items.Clear();
                 Usernames.Items.Clear();
-                //File.Decrypt("encryptedPasswords.txt");
                 File.WriteAllLines("encryptedPasswords.txt", new string[0]);
-                //File.Encrypt("encryptedPasswords.txt");
             }
         }
 
@@ -259,9 +249,7 @@ namespace OffSyncPasswordManager
             Credentials.RemoveAt(index);
             Usernames.Items.RemoveAt(index);
             CredDescriptions.Items.RemoveAt(index);
-            //File.Decrypt("encryptedPasswords.txt");
             File.WriteAllLines("encryptedPasswords.txt", Credentials);
-            //File.Encrypt("encryptedPasswords.txt");
         }
 
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -271,8 +259,7 @@ namespace OffSyncPasswordManager
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
         {
-            //File.Encrypt("encryptedKey.txt");
-            //File.Encrypt("encryptedPasswords.txt");
+
         }
     }
 }
