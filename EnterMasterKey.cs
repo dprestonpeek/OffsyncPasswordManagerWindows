@@ -50,7 +50,7 @@ namespace OffSyncPasswordManager
             }
             else
             {
-                ShowChangeKeyWindow();
+                Application.Exit();
             }
         }
 

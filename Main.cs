@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Collections;
 using System.Windows.Forms;
+using System.Diagnostics;
+using System.ComponentModel;
 
 namespace OffSyncPasswordManager
 {
@@ -10,7 +12,12 @@ namespace OffSyncPasswordManager
     {
         ConfirmationWindow confirm;
         ChangeKey changeKey;
+        About about;
         List<string> Credentials;
+
+        private static string keyFile = "encryptedKey.txt";
+        private static string pwordsFile = "encryptedPasswords.txt";
+        private static string exportedFile = "exportedPasswords.txt";
 
         public Main()
         {
@@ -29,12 +36,18 @@ namespace OffSyncPasswordManager
         {
             if (Master.KeyDataNotEmpty())
             {
-                string[] encrypted = AesEncryption.EncryptString(Original.Text, Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, Master.AuthKey);
+                if (Original.Text.Equals(""))
+                {
+                    Original.Text = GeneratePassword();
+                }
+                string[] encryptedCreds = AesEncryption.EncryptString(CredDesc.Text + "|" + Username.Text + "|" + Original.Text, Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, Master.AuthKey);
 
-                AddCredential(encrypted[0] + "|" + encrypted[4]);
+                AddCredential(encryptedCreds[0], encryptedCreds[4]);
                 Original.Text = "";
                 Username.Text = "";
                 CredDesc.Text = "";
+
+                CredDesc.Select();
             }
         }
 
@@ -54,16 +67,31 @@ namespace OffSyncPasswordManager
         /// <returns></returns>
         private string DecryptPassword()
         {
-            if (Master.KeyDataNotEmpty())
+            if (Master.KeyDataNotEmpty() && Usernames.SelectedItems.Count == 1)
             {
-                string[] storedData = File.ReadAllLines("encryptedPasswords.txt");
+                string[] storedData = File.ReadAllLines(pwordsFile);
                 string[] split = storedData[Usernames.SelectedIndex].Split('|');
-                string encryptedPassword = split[2];
-                string authKey = split[3];
-                string decryptedData = AesEncryption.DecryptToString(Convert.FromBase64String(encryptedPassword), Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, authKey);
-                return decryptedData;
+                string encryptedCreds = split[0];
+                string authKey = split[1];
+                string decryptedCredsData = AesEncryption.DecryptToString(Convert.FromBase64String(encryptedCreds), Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, authKey);
+                string[] credsSplit = decryptedCredsData.Split('|');
+                return credsSplit[2];
             }
             return "";
+        }
+
+        private string[] DecryptCredentials(string encryptedInfo)
+        {
+            if (Master.KeyDataNotEmpty())
+            {
+                string[] split = encryptedInfo.Split('|');
+                string encryptedCreds = split[0];
+                string authKey = split[1];
+                string decryptedCredsData = AesEncryption.DecryptToString(Convert.FromBase64String(encryptedCreds), Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, authKey);
+                string[] credsSplit = decryptedCredsData.Split('|');
+                return credsSplit;
+            }
+            return new string[0];
         }
 
         /// <summary>
@@ -73,14 +101,16 @@ namespace OffSyncPasswordManager
         {
             if (Master.KeyDataNotEmpty())
             {
-                string[] storedData = File.ReadAllLines("encryptedPasswords.txt");
+                string[] storedData = File.ReadAllLines(pwordsFile);
                 Credentials.Clear();
                 Credentials.AddRange(storedData);
                 foreach (string line in storedData)
                 {
                     string[] split = line.Split('|');
-                    CredDescriptions.Items.Add(split[0]);
-                    Usernames.Items.Add(split[1]);
+                    string creds = AesEncryption.DecryptToString(Convert.FromBase64String(split[0]), Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, split[1]);
+                    string[] credsSplit = creds.Split('|');
+                    CredDescriptions.Items.Add(credsSplit[0]);
+                    Usernames.Items.Add(credsSplit[1]);
                 }
             }
         }
@@ -89,18 +119,15 @@ namespace OffSyncPasswordManager
         /// Encrypts and adds the password to credentials list.
         /// </summary>
         /// <param name="encryptedPasswordAndAuthKey"></param>
-        private void AddCredential(string encryptedPasswordAndAuthKey)
+        private void AddCredential(string encryptedCreds, string authKey)
         {
-            string[] split = encryptedPasswordAndAuthKey.Split('|');
-            string encryptedPassword = split[0];
-            string authKey = split[1];
-            Credentials.Add(CredDesc.Text + "|" + Username.Text + "|" + encryptedPassword + "|" + authKey);
+            Credentials.Add(encryptedCreds + "|" + authKey);
             CredDescriptions.Items.Add(CredDesc.Text);
             Usernames.Items.Add(Username.Text);
 
             string[] items = new string[Credentials.Count];
             Credentials.CopyTo(items, 0);
-            File.WriteAllLines("encryptedPasswords.txt", items);
+            File.WriteAllLines(pwordsFile, items);
         }
 
         private void confrimToolStripMenuItem_Click(object sender, EventArgs e)
@@ -136,7 +163,7 @@ namespace OffSyncPasswordManager
             {
                 if (Master.KeyDataNotEmpty())
                 {
-                    string[] storedData = File.ReadAllLines("encryptedPasswords.txt");
+                    string[] storedData = File.ReadAllLines(pwordsFile);
                     Credentials.Clear();
                     Credentials.AddRange(storedData);
                     foreach (string line in storedData)
@@ -182,7 +209,7 @@ namespace OffSyncPasswordManager
                 Credentials.Clear();
                 CredDescriptions.Items.Clear();
                 Usernames.Items.Clear();
-                File.WriteAllLines("encryptedPasswords.txt", new string[0]);
+                File.WriteAllLines(pwordsFile, new string[0]);
             }
         }
 
@@ -249,7 +276,7 @@ namespace OffSyncPasswordManager
             Credentials.RemoveAt(index);
             Usernames.Items.RemoveAt(index);
             CredDescriptions.Items.RemoveAt(index);
-            File.WriteAllLines("encryptedPasswords.txt", Credentials);
+            File.WriteAllLines(pwordsFile, Credentials);
         }
 
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -260,6 +287,58 @@ namespace OffSyncPasswordManager
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
         {
 
+        }
+
+        private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("UpdateRepair.exe");
+            Application.Exit();
+        }
+
+        private void exportPasswordsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.FileOk += ExportPasswords;
+            saveFileDialog1.ShowDialog();
+        }
+
+        private void ExportPasswords(object sender, CancelEventArgs e)
+        {
+            File.WriteAllLines(saveFileDialog1.FileName, Credentials);
+        }
+
+        private void importToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.FileOk += ImportPasswords;
+            openFileDialog1.ShowDialog();
+        }
+
+        private void ImportPasswords(object sender, CancelEventArgs e)
+        {
+            string[] importedPasswords = File.ReadAllLines(openFileDialog1.FileName);
+            foreach (string creds in importedPasswords)
+            {
+                if (!Credentials.Contains(creds))
+                {
+                    Credentials.Add(creds);
+                    string[] decryptedCreds = DecryptCredentials(creds);
+
+                    CredDescriptions.Items.Add(decryptedCreds[0]);
+                    Usernames.Items.Add(decryptedCreds[1]);
+                }
+            }
+
+            string[] items = new string[Credentials.Count];
+            Credentials.CopyTo(items, 0);
+            File.WriteAllLines(pwordsFile, items);
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (about == null)
+            {
+                about = new About();
+            }
+            about.Show();
         }
     }
 }

@@ -29,6 +29,7 @@ namespace OffSyncPasswordManager
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChangeKey));
             this.PreviousKeyLabel = new System.Windows.Forms.Label();
             this.PreviousKey = new System.Windows.Forms.TextBox();
             this.NewKey1 = new System.Windows.Forms.TextBox();
@@ -110,6 +111,7 @@ namespace OffSyncPasswordManager
             // 
             // ChangeKey
             // 
+            this.AcceptButton = this.ChangeKeyButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(309, 233);
@@ -117,6 +119,7 @@ namespace OffSyncPasswordManager
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.PreviousKey);
             this.Controls.Add(this.PreviousKeyLabel);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ChangeKey";
             this.Text = "Change Master Key";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ChangeKey_FormClosed);

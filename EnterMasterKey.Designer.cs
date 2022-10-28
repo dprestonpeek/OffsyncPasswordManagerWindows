@@ -30,6 +30,7 @@ namespace OffSyncPasswordManager
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EnterMasterKey));
             this.label1 = new System.Windows.Forms.Label();
             this.MasterKeyEntry = new System.Windows.Forms.TextBox();
             this.OKButton = new System.Windows.Forms.Button();
@@ -68,6 +69,7 @@ namespace OffSyncPasswordManager
             // timer1
             // 
             this.timer1.Enabled = true;
+            this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // EnterMasterKey
@@ -80,6 +82,7 @@ namespace OffSyncPasswordManager
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.MasterKeyEntry);
             this.Controls.Add(this.label1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "EnterMasterKey";

@@ -52,10 +52,8 @@ namespace OffSyncPasswordManager
         {
             if (File.Exists(keyFile))
             {
-                //File.Decrypt(keyFile);
                 string[] storedData = File.ReadAllLines(keyFile);
                 string storedKey = storedData[0];
-                //File.Encrypt(keyFile);
 
                 if (storedKey.Equals(""))
                 {
@@ -67,19 +65,15 @@ namespace OffSyncPasswordManager
             {
                 File.WriteAllLines(keyFile, KeyData);
                 File.WriteAllLines(pwordsFile, new string[0]);
-                //File.Encrypt(keyFile);
-                //File.Encrypt(pwordsFile);
                 return false;
             }
         }
 
         public static string[] RetrieveMasterKeyDataIfCorrect()
         {
-            //File.Decrypt(keyFile);
             string[] storedData = File.ReadAllLines(keyFile);
             string storedKey = storedData[0];
             string decryptedKey = AesEncryption.DecryptToString(Convert.FromBase64String(storedKey), GenerateMasterKeyKey(), storedData[1], storedData[2], storedData[3], storedData[4]);
-            //File.Encrypt(keyFile);
 
             if (decryptedKey.Equals(Key))
             {
@@ -90,7 +84,6 @@ namespace OffSyncPasswordManager
 
         public static bool KeyCorrect()
         {
-            //File.Decrypt(keyFile);
             string[] storedData = File.ReadAllLines(keyFile);
             string storedKey = storedData[0];
             string storedIv = storedData[1];
@@ -98,7 +91,6 @@ namespace OffSyncPasswordManager
             string storedAuthKeySalt = storedData[3];
             string storedAuthKey = storedData[4];
             string decryptedKey = AesEncryption.DecryptToString(Convert.FromBase64String(storedKey), GenerateMasterKeyKey(), storedIv, storedKeySalt, storedAuthKeySalt, storedAuthKey);
-            //File.Encrypt(keyFile);
 
             return KeyMatches(decryptedKey);
         }
@@ -129,9 +121,7 @@ namespace OffSyncPasswordManager
             if (KeyDataNotEmpty())
             {
                 string[] encryptedMasterKey = AesEncryption.EncryptString(Key, GenerateMasterKeyKey(), KeyData[1], KeyData[2], KeyData[3], KeyData[4]);
-                //File.Encrypt(keyFile);
                 File.WriteAllLines(keyFile, encryptedMasterKey);
-                //File.Decrypt(keyFile);
                 return encryptedMasterKey;
             }
             InitializeMasterKeyData();
@@ -140,8 +130,6 @@ namespace OffSyncPasswordManager
 
         public static void ChangeMasterKey(string newKey)
         {
-            
-
             Key = newKey;
             EncryptAndSaveMasterKey();
         }
