@@ -44,11 +44,6 @@ namespace OffSyncPasswordManager
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeMasterPasswordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setMasterPasswordBelowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.OldKeyEntry = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.NewKeyEntry = new System.Windows.Forms.ToolStripTextBox();
-            this.confrimToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearPasswordsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearAllPasswordsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearSelectedCredentialsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -194,47 +189,10 @@ namespace OffSyncPasswordManager
             // 
             // changeMasterPasswordToolStripMenuItem
             // 
-            this.changeMasterPasswordToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.setMasterPasswordBelowToolStripMenuItem,
-            this.OldKeyEntry,
-            this.toolStripMenuItem1,
-            this.NewKeyEntry,
-            this.confrimToolStripMenuItem});
-            this.changeMasterPasswordToolStripMenuItem.Enabled = false;
             this.changeMasterPasswordToolStripMenuItem.Name = "changeMasterPasswordToolStripMenuItem";
             this.changeMasterPasswordToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.changeMasterPasswordToolStripMenuItem.Text = "Change Master Password";
-            this.changeMasterPasswordToolStripMenuItem.Visible = false;
-            // 
-            // setMasterPasswordBelowToolStripMenuItem
-            // 
-            this.setMasterPasswordBelowToolStripMenuItem.Enabled = false;
-            this.setMasterPasswordBelowToolStripMenuItem.Name = "setMasterPasswordBelowToolStripMenuItem";
-            this.setMasterPasswordBelowToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
-            this.setMasterPasswordBelowToolStripMenuItem.Text = "Enter old password:";
-            // 
-            // OldKeyEntry
-            // 
-            this.OldKeyEntry.Name = "OldKeyEntry";
-            this.OldKeyEntry.Size = new System.Drawing.Size(150, 23);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(210, 22);
-            this.toolStripMenuItem1.Text = "Enter new password:";
-            // 
-            // NewKeyEntry
-            // 
-            this.NewKeyEntry.Name = "NewKeyEntry";
-            this.NewKeyEntry.Size = new System.Drawing.Size(150, 23);
-            // 
-            // confrimToolStripMenuItem
-            // 
-            this.confrimToolStripMenuItem.Name = "confrimToolStripMenuItem";
-            this.confrimToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
-            this.confrimToolStripMenuItem.Text = "Confirm";
-            this.confrimToolStripMenuItem.Click += new System.EventHandler(this.confrimToolStripMenuItem_Click);
+            this.changeMasterPasswordToolStripMenuItem.Click += new System.EventHandler(this.changeMasterPasswordToolStripMenuItem_Click);
             // 
             // clearPasswordsToolStripMenuItem
             // 
@@ -433,11 +391,6 @@ namespace OffSyncPasswordManager
         private System.Windows.Forms.ToolStripMenuItem clearAllPasswordsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem setMasterPasswordBelowToolStripMenuItem;
-        private System.Windows.Forms.ToolStripTextBox OldKeyEntry;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripTextBox NewKeyEntry;
-        private System.Windows.Forms.ToolStripMenuItem confrimToolStripMenuItem;
         private System.Windows.Forms.TextBox CredDesc;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.SplitContainer splitContainer1;

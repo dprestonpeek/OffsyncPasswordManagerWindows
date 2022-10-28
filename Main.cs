@@ -121,56 +121,46 @@ namespace OffSyncPasswordManager
         /// <param name="encryptedPasswordAndAuthKey"></param>
         private void AddCredential(string encryptedCreds, string authKey)
         {
+            AddCredential(encryptedCreds, CredDesc.Text, Username.Text, authKey);
+        }
+
+        private void AddCredential(string encryptedCreds, string desc, string user, string authKey)
+        {
             Credentials.Add(encryptedCreds + "|" + authKey);
-            CredDescriptions.Items.Add(CredDesc.Text);
-            Usernames.Items.Add(Username.Text);
+            CredDescriptions.Items.Add(desc);
+            Usernames.Items.Add(user);
 
             string[] items = new string[Credentials.Count];
             Credentials.CopyTo(items, 0);
             File.WriteAllLines(pwordsFile, items);
         }
 
-        private void confrimToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (Master.KeyMatches(OldKeyEntry.Text))
-            {
-                Master.Key = NewKeyEntry.Text;
-                Master.EncryptAndSaveMasterKey();
-                List<string> newCreds = new List<string>();
-                foreach(string line in Credentials)
-                {
-                    string[] split = line.Split('|');
-                    newCreds.Add(split[0] + "|" + split[1] + "|" + AesEncryption.EncryptString(split[2], Master.GenerateMasterKeyKey(), Master.IV, Master.KeySalt, Master.AuthKeySalt, Master.AuthKey));
-                }
-                Credentials = newCreds;
-                PopulateCredentials();
-            }
-        }
-
-        private void ChangeMasterKey()
-        {
-            if (changeKey != null)
-            {
-                changeKey.Dispose();
-            }
-            changeKey = new ChangeKey(true);
-            changeKey.FormClosed += KeyChanged;
-        }
-
         private void KeyChanged(object sender, FormClosedEventArgs e)
         {
+            changeKey.FormClosed -= KeyChanged;
             if (changeKey.MasterKeyDirty)
             {
                 if (Master.KeyDataNotEmpty())
                 {
                     string[] storedData = File.ReadAllLines(pwordsFile);
-                    Credentials.Clear();
-                    Credentials.AddRange(storedData);
+                    List<string> clearTextPasswords = new List<string>();
+
                     foreach (string line in storedData)
                     {
-                        string[] split = line.Split('|');
-                        CredDescriptions.Items.Add(split[0]);
-                        Usernames.Items.Add(split[1]);
+                        string[] creds = DecryptCredentials(line/*.Split('|')[0]*/);
+                        clearTextPasswords.Add(creds[0] + "|" + creds[1] + "|" + creds[2]);
+                    }
+                    Credentials.Clear();
+                    CredDescriptions.Items.Clear();
+                    Usernames.Items.Clear();
+                    Master.ChangeMasterKey(changeKey.NewMasterKey);
+
+                    foreach (string line in clearTextPasswords)
+                    {
+                        string[] creds = line.Split('|');
+                        string[] encryptedCreds = AesEncryption.EncryptString(creds[0] + "|" + creds[1] + "|" + creds[2], Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, Master.AuthKey);
+
+                        AddCredential(encryptedCreds[0], creds[0], creds[1], encryptedCreds[4]);
                     }
                 }
             }
@@ -315,12 +305,12 @@ namespace OffSyncPasswordManager
         private void ImportPasswords(object sender, CancelEventArgs e)
         {
             string[] importedPasswords = File.ReadAllLines(openFileDialog1.FileName);
-            foreach (string creds in importedPasswords)
+            foreach (string line in importedPasswords)
             {
-                if (!Credentials.Contains(creds))
+                if (!Credentials.Contains(line))
                 {
-                    Credentials.Add(creds);
-                    string[] decryptedCreds = DecryptCredentials(creds);
+                    Credentials.Add(line);
+                    string[] decryptedCreds = DecryptCredentials(line);
 
                     CredDescriptions.Items.Add(decryptedCreds[0]);
                     Usernames.Items.Add(decryptedCreds[1]);
@@ -339,6 +329,13 @@ namespace OffSyncPasswordManager
                 about = new About();
             }
             about.Show();
+        }
+
+        private void changeMasterPasswordToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            changeKey = new ChangeKey(true);
+            changeKey.FormClosed += KeyChanged;
+            changeKey.Show();
         }
     }
 }
