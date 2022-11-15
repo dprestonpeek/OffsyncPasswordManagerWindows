@@ -147,7 +147,7 @@ namespace OffSyncPasswordManager
 
                     foreach (string line in storedData)
                     {
-                        string[] creds = DecryptCredentials(line/*.Split('|')[0]*/);
+                        string[] creds = DecryptCredentials(line);
                         clearTextPasswords.Add(creds[0] + "|" + creds[1] + "|" + creds[2]);
                     }
                     Credentials.Clear();
@@ -324,10 +324,7 @@ namespace OffSyncPasswordManager
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (about == null)
-            {
-                about = new About();
-            }
+            about = new About();
             about.Show();
         }
 
@@ -336,6 +333,13 @@ namespace OffSyncPasswordManager
             changeKey = new ChangeKey(true);
             changeKey.FormClosed += KeyChanged;
             changeKey.Show();
+        }
+
+        private void lockToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EnterMasterKey lockentry = new EnterMasterKey();
+            lockentry.Show();
+            Hide();
         }
     }
 }

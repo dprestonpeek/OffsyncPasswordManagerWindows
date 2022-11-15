@@ -60,6 +60,7 @@ namespace OffSyncPasswordManager
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.lockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -147,6 +148,7 @@ namespace OffSyncPasswordManager
             this.importToolStripMenuItem,
             this.exportPasswordsToolStripMenuItem,
             this.toolStripSeparator1,
+            this.lockToolStripMenuItem,
             this.quitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -155,26 +157,26 @@ namespace OffSyncPasswordManager
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.importToolStripMenuItem.Text = "Import Passwords...";
             this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
             // 
             // exportPasswordsToolStripMenuItem
             // 
             this.exportPasswordsToolStripMenuItem.Name = "exportPasswordsToolStripMenuItem";
-            this.exportPasswordsToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.exportPasswordsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exportPasswordsToolStripMenuItem.Text = "Export Passwords...";
             this.exportPasswordsToolStripMenuItem.Click += new System.EventHandler(this.exportPasswordsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(174, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
@@ -342,6 +344,13 @@ namespace OffSyncPasswordManager
             this.saveFileDialog1.FileName = "exportedPasswords";
             this.saveFileDialog1.InitialDirectory = "./";
             // 
+            // lockToolStripMenuItem
+            // 
+            this.lockToolStripMenuItem.Name = "lockToolStripMenuItem";
+            this.lockToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.lockToolStripMenuItem.Text = "Lock";
+            this.lockToolStripMenuItem.Click += new System.EventHandler(this.lockToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AcceptButton = this.EncryptButton;
@@ -403,6 +412,7 @@ namespace OffSyncPasswordManager
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.ToolStripMenuItem lockToolStripMenuItem;
     }
 }
 
