@@ -19,6 +19,8 @@ namespace OffSyncPasswordManager
         private static string pwordsFile = "encryptedPasswords.txt";
         private static string exportedFile = "exportedPasswords.txt";
 
+        private int lockTime = 0;
+        private bool locked = false;
         public Main()
         {
             InitializeComponent();
@@ -58,7 +60,19 @@ namespace OffSyncPasswordManager
         /// <param name="e"></param>
         private void DecryptButton_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(DecryptPassword());
+            if (lockTime > 5)
+            {
+                if (!locked)
+                {
+                    locked = true;
+                    LockOffSync();
+                    lockTime = 0;
+                }
+            }
+            if (!locked)
+            {
+                Clipboard.SetText(DecryptPassword());
+            }
         }
 
         /// <summary>
@@ -337,9 +351,37 @@ namespace OffSyncPasswordManager
 
         private void lockToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            LockOffSync();
+        }
+
+        private void LockOffSync()
+        {
             EnterMasterKey lockentry = new EnterMasterKey();
             lockentry.Show();
             Hide();
+        }
+
+        private void lockTimer_Tick(object sender, EventArgs e)
+        {
+            if (ActiveForm != this)
+            {
+                if (!locked)
+                {
+                    lockTime++;
+                }
+            }
+            else
+            {
+                if (lockTime > 60)
+                {
+                    if (!locked)
+                    {
+                        locked = true;
+                        LockOffSync();
+                        lockTime = 0;
+                    }
+                }
+            }
         }
     }
 }
