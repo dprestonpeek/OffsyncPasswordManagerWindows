@@ -295,7 +295,7 @@ namespace OffSyncPasswordManager
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("UpdateRepair.exe");
+            Process.Start("OffSyncUpdateRepair.exe");
             Application.Exit();
         }
 
