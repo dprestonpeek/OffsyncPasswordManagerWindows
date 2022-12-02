@@ -21,6 +21,7 @@ namespace OffSyncPasswordManager
 
         private int lockTime = 0;
         private bool locked = false;
+        private bool editing = false;
         public Main()
         {
             InitializeComponent();
@@ -36,20 +37,34 @@ namespace OffSyncPasswordManager
         /// <param name="e"></param>
         private void EncryptButton_Click(object sender, EventArgs e)
         {
-            if (Master.KeyDataNotEmpty())
+            if (editing) 
             {
-                if (Original.Text.Equals(""))
-                {
-                    Original.Text = GeneratePassword();
-                }
+                int index = CredDescriptions.SelectedIndex;
                 string[] encryptedCreds = AesEncryption.EncryptString(CredDesc.Text + "|" + Username.Text + "|" + Original.Text, Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, Master.AuthKey);
 
-                AddCredential(encryptedCreds[0], encryptedCreds[4]);
-                Original.Text = "";
-                Username.Text = "";
-                CredDesc.Text = "";
+                Credentials.RemoveAt(index);
+                CredDescriptions.Items.RemoveAt(index);
+                Usernames.Items.RemoveAt(index);
+                InsertCredential(index, encryptedCreds[0], encryptedCreds[4]);
+                StopEditing();
+            }
+            else
+            {
+                if (Master.KeyDataNotEmpty())
+                {
+                    if (Original.Text.Equals(""))
+                    {
+                        Original.Text = GeneratePassword();
+                    }
+                    string[] encryptedCreds = AesEncryption.EncryptString(CredDesc.Text + "|" + Username.Text + "|" + Original.Text, Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, Master.AuthKey);
 
-                CredDesc.Select();
+                    AddCredential(encryptedCreds[0], encryptedCreds[4]);
+                    Original.Text = "";
+                    Username.Text = "";
+                    CredDesc.Text = "";
+
+                    CredDesc.Select();
+                }
             }
         }
 
@@ -69,10 +84,7 @@ namespace OffSyncPasswordManager
                     lockTime = 0;
                 }
             }
-            if (!locked)
-            {
-                Clipboard.SetText(DecryptPassword());
-            }
+            CopyPassword();
         }
 
         /// <summary>
@@ -90,6 +102,26 @@ namespace OffSyncPasswordManager
                 string decryptedCredsData = AesEncryption.DecryptToString(Convert.FromBase64String(encryptedCreds), Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, authKey);
                 string[] credsSplit = decryptedCredsData.Split('|');
                 return credsSplit[2];
+            }
+            return "";
+        }
+
+        /// <summary>
+        /// Copies the selected account password to clipboard if the app is not locked
+        /// </summary>
+        private void CopyPassword()
+        {
+            if (!locked)
+            {
+                Clipboard.SetText(DecryptPassword());
+            }
+        }
+
+        private string GetPassword()
+        {
+            if (!locked)
+            {
+                return DecryptPassword();
             }
             return "";
         }
@@ -143,6 +175,19 @@ namespace OffSyncPasswordManager
             Credentials.Add(encryptedCreds + "|" + authKey);
             CredDescriptions.Items.Add(desc);
             Usernames.Items.Add(user);
+
+            string[] items = new string[Credentials.Count];
+            Credentials.CopyTo(items, 0);
+            File.WriteAllLines(pwordsFile, items);
+        }
+
+        private void InsertCredential(int index, string encryptedCreds, string authKey)
+        {
+            string desc = CredDesc.Text;
+            string user = Username.Text;
+            Credentials.Insert(index, encryptedCreds + "|" + authKey);
+            CredDescriptions.Items.Insert(index, desc);
+            Usernames.Items.Insert(index, user);
 
             string[] items = new string[Credentials.Count];
             Credentials.CopyTo(items, 0);
@@ -264,14 +309,75 @@ namespace OffSyncPasswordManager
             return password;
         }
 
+        private void Usernames_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (locked)
+                    return;
+                if (CredDescriptions.SelectedItem != null)
+                {
+                    StartEditing();
+                    int index = Usernames.SelectedIndex;
+                    CredDescriptions.SelectedIndex = index;
+
+                    CredDesc.Text = CredDescriptions.SelectedItem.ToString();
+                    Username.Text = Usernames.SelectedItem.ToString();
+                    Original.Text = GetPassword();
+                }
+            }
+            else
+            {
+                StopEditing();
+            }
+        }
+
         private void Usernames_DoubleClick(object sender, EventArgs e)
         {
-            Clipboard.SetText(DecryptPassword());
+            CopyPassword();
+        }
+
+        private void CredDescriptions_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (locked)
+                    return;
+                if (CredDescriptions.SelectedItem != null)
+                {
+                    StartEditing();
+                    int index = CredDescriptions.SelectedIndex;
+                    Usernames.SelectedIndex = index;
+
+                    CredDesc.Text = CredDescriptions.SelectedItem.ToString();
+                    Username.Text = Usernames.SelectedItem.ToString();
+                    Original.Text = GetPassword();
+                }
+            }
+            else
+            {
+                StopEditing();
+            }
         }
 
         private void CredDescriptions_DoubleClick(object sender, EventArgs e)
         {
-            Clipboard.SetText(DecryptPassword());
+            CopyPassword();
+        }
+
+        private void StartEditing()
+        {
+            editing = true;
+            EncryptButton.Text = "Update Credential";
+        }
+
+        private void StopEditing()
+        {
+            editing = false;
+            EncryptButton.Text = "Add Credential";
+            CredDesc.Text = "";
+            Username.Text = "";
+            Original.Text = "";
         }
 
         private void clearSelectedCredentialsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -382,6 +488,16 @@ namespace OffSyncPasswordManager
                     }
                 }
             }
+        }
+
+        private void ViewPasswordButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            Original.UseSystemPasswordChar = false;
+        }
+
+        private void ViewPasswordButton_MouseUp(object sender, MouseEventArgs e)
+        {
+            Original.UseSystemPasswordChar = true;
         }
     }
 }

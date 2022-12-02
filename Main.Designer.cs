@@ -60,6 +60,7 @@ namespace OffSyncPasswordManager
             this.Username = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.ViewPasswordButton = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.lockTimer = new System.Windows.Forms.Timer(this.components);
@@ -96,8 +97,7 @@ namespace OffSyncPasswordManager
             // 
             this.Original.Location = new System.Drawing.Point(7, 93);
             this.Original.Name = "Original";
-            this.Original.PasswordChar = '*';
-            this.Original.Size = new System.Drawing.Size(306, 23);
+            this.Original.Size = new System.Drawing.Size(287, 23);
             this.Original.TabIndex = 2;
             this.Original.UseSystemPasswordChar = true;
             // 
@@ -121,6 +121,7 @@ namespace OffSyncPasswordManager
             this.CredDescriptions.TabIndex = 5;
             this.CredDescriptions.SelectedIndexChanged += new System.EventHandler(this.CredDescriptions_SelectedIndexChanged);
             this.CredDescriptions.DoubleClick += new System.EventHandler(this.CredDescriptions_DoubleClick);
+            this.CredDescriptions.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CredDescriptions_MouseUp);
             // 
             // label4
             // 
@@ -297,6 +298,7 @@ namespace OffSyncPasswordManager
             this.Usernames.TabIndex = 6;
             this.Usernames.SelectedIndexChanged += new System.EventHandler(this.Usernames_SelectedIndexChanged);
             this.Usernames.DoubleClick += new System.EventHandler(this.Usernames_DoubleClick);
+            this.Usernames.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Usernames_MouseUp);
             // 
             // GenerateButton
             // 
@@ -326,6 +328,7 @@ namespace OffSyncPasswordManager
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.ViewPasswordButton);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label3);
@@ -340,6 +343,18 @@ namespace OffSyncPasswordManager
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Enter New Credentials";
+            // 
+            // ViewPasswordButton
+            // 
+            this.ViewPasswordButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.ViewPasswordButton.Location = new System.Drawing.Point(292, 93);
+            this.ViewPasswordButton.Name = "ViewPasswordButton";
+            this.ViewPasswordButton.Size = new System.Drawing.Size(21, 23);
+            this.ViewPasswordButton.TabIndex = 19;
+            this.ViewPasswordButton.Text = "👁";
+            this.ViewPasswordButton.UseVisualStyleBackColor = true;
+            this.ViewPasswordButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ViewPasswordButton_MouseDown);
+            this.ViewPasswordButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ViewPasswordButton_MouseUp);
             // 
             // openFileDialog1
             // 
@@ -422,6 +437,7 @@ namespace OffSyncPasswordManager
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem lockToolStripMenuItem;
         private System.Windows.Forms.Timer lockTimer;
+        private System.Windows.Forms.Button ViewPasswordButton;
     }
 }
 
