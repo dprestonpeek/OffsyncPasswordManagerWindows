@@ -14,20 +14,25 @@ namespace OffSyncPasswordManager
         ChangeKey changeKey;
         About about;
         List<string> Credentials;
+        List<string> UniqueUsernames;
 
         private static string keyFile = "encryptedKey.txt";
         private static string pwordsFile = "encryptedPasswords.txt";
         private static string exportedFile = "exportedPasswords.txt";
 
+        private int defLockTime = 60;
         private int lockTime = 0;
         private bool locked = false;
         private bool editing = false;
+        private bool filtering = false;
         public Main()
         {
             InitializeComponent();
             Credentials = new List<string>();
+            UniqueUsernames = new List<string>();
             Master.InitializeMasterKeyData();
-            PopulateCredentials();
+            InitializeCredentials();
+            InitializeFilter();
         }
 
         /// <summary>
@@ -75,7 +80,7 @@ namespace OffSyncPasswordManager
         /// <param name="e"></param>
         private void DecryptButton_Click(object sender, EventArgs e)
         {
-            if (lockTime > 5)
+            if (lockTime > defLockTime)
             {
                 if (!locked)
                 {
@@ -84,7 +89,10 @@ namespace OffSyncPasswordManager
                     lockTime = 0;
                 }
             }
-            CopyPassword();
+            else
+            {
+                CopyPassword();
+            }
         }
 
         /// <summary>
@@ -143,21 +151,58 @@ namespace OffSyncPasswordManager
         /// <summary>
         /// Read passwords and info from file and populate fields in-app.
         /// </summary>
-        private void PopulateCredentials()
+        private void InitializeCredentials()
         {
             if (Master.KeyDataNotEmpty())
             {
                 string[] storedData = File.ReadAllLines(pwordsFile);
                 Credentials.Clear();
                 Credentials.AddRange(storedData);
-                foreach (string line in storedData)
+                PopulateCredentials(Credentials);
+            }
+        }
+
+        private void InitializeFilter()
+        {
+            UsernameFilter.Items.AddRange(UniqueUsernames.ToArray());
+            UsernameFilter.SelectedIndex = 0;
+        }
+
+        private void PopulateCredentials(List<string> credentials)
+        {
+            CredDescriptions.Items.Clear();
+            Usernames.Items.Clear();
+            foreach (string line in credentials)
+            {
+                string[] split = line.Split('|');
+                string creds = AesEncryption.DecryptToString(Convert.FromBase64String(split[0]), Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, split[1]);
+                string[] credsSplit = creds.Split('|');
+                CredDescriptions.Items.Add(credsSplit[0]);
+                Usernames.Items.Add(credsSplit[1]);
+                if (!UniqueUsernames.Contains(credsSplit[1]))
                 {
-                    string[] split = line.Split('|');
-                    string creds = AesEncryption.DecryptToString(Convert.FromBase64String(split[0]), Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, split[1]);
-                    string[] credsSplit = creds.Split('|');
-                    CredDescriptions.Items.Add(credsSplit[0]);
-                    Usernames.Items.Add(credsSplit[1]);
+                    UniqueUsernames.Add(credsSplit[1]);
                 }
+            }
+        }
+
+        private void FilterCredentials()
+        {
+            filtering = false;
+            PopulateCredentials(Credentials);
+            if ((string)UsernameFilter.SelectedItem != "All")
+            {
+                filtering = true;
+                List<string> creds = new List<string>();
+                for (int i = 0; i < Usernames.Items.Count; i++)
+                {
+                    string name = (string)Usernames.Items[i];
+                    if (name == (string)UsernameFilter.SelectedItem)
+                    {
+                        creds.Add(Credentials[i]);
+                    }
+                }
+                PopulateCredentials(creds);
             }
         }
 
@@ -173,8 +218,16 @@ namespace OffSyncPasswordManager
         private void AddCredential(string encryptedCreds, string desc, string user, string authKey)
         {
             Credentials.Add(encryptedCreds + "|" + authKey);
-            CredDescriptions.Items.Add(desc);
-            Usernames.Items.Add(user);
+            if (!UniqueUsernames.Contains(user))
+            {
+                UniqueUsernames.Add(user);
+                UsernameFilter.Items.Add(user);
+            }
+            if (filtering)
+            {
+                PopulateCredentials(Credentials);
+                FilterCredentials();
+            }
 
             string[] items = new string[Credentials.Count];
             Credentials.CopyTo(items, 0);
@@ -334,7 +387,19 @@ namespace OffSyncPasswordManager
 
         private void Usernames_DoubleClick(object sender, EventArgs e)
         {
-            CopyPassword();
+            if (lockTime > defLockTime)
+            {
+                if (!locked)
+                {
+                    locked = true;
+                    LockOffSync();
+                    lockTime = 0;
+                }
+            }
+            else
+            {
+                CopyPassword();
+            }
         }
 
         private void CredDescriptions_MouseUp(object sender, MouseEventArgs e)
@@ -362,7 +427,19 @@ namespace OffSyncPasswordManager
 
         private void CredDescriptions_DoubleClick(object sender, EventArgs e)
         {
-            CopyPassword();
+            if (lockTime > defLockTime)
+            {
+                if (!locked)
+                {
+                    locked = true;
+                    LockOffSync();
+                    lockTime = 0;
+                }
+            }
+            else
+            {
+                CopyPassword();
+            }
         }
 
         private void StartEditing()
@@ -478,7 +555,7 @@ namespace OffSyncPasswordManager
             }
             else
             {
-                if (lockTime > 60)
+                if (lockTime > defLockTime)
                 {
                     if (!locked)
                     {
@@ -498,6 +575,11 @@ namespace OffSyncPasswordManager
         private void ViewPasswordButton_MouseUp(object sender, MouseEventArgs e)
         {
             Original.UseSystemPasswordChar = true;
+        }
+
+        private void UsernameFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FilterCredentials();
         }
     }
 }

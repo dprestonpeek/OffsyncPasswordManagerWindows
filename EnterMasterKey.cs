@@ -10,6 +10,7 @@ namespace OffSyncPasswordManager
 {
     public partial class EnterMasterKey : Form
     {
+        Main main;
         ChangeKey changeKey;
         public bool prevent = true;
         public EnterMasterKey()
@@ -56,7 +57,7 @@ namespace OffSyncPasswordManager
 
         private void ShowMainForm()
         {
-            Main main = new Main();
+            main = new Main();
             main.Show();
             main.FormClosed += CloseForm;
             Hide();
@@ -65,6 +66,10 @@ namespace OffSyncPasswordManager
         private void CloseForm(object sender, FormClosedEventArgs e)
         {
             Close();
+            if (main == null)
+            {
+                Application.Exit();
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
