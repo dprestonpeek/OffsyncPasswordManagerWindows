@@ -10,15 +10,23 @@ namespace OffSyncPasswordManager
 {
     public partial class Main : Form
     {
+        public static Main Instance;
+
         ConfirmationWindow confirm;
         ChangeKey changeKey;
         About about;
         List<string> Credentials;
+        List<string> FilteredCreds;
         List<string> UniqueUsernames;
+        public string[] Settings;
 
         private static string keyFile = "encryptedKey.txt";
         private static string pwordsFile = "encryptedPasswords.txt";
         private static string exportedFile = "exportedPasswords.txt";
+        private static string settingsFile = "settings.txt";
+
+        public string keywordFilter = "";
+        private bool disableKeywordTrigger = false;
 
         private int defLockTime = 60;
         private int lockTime = 0;
@@ -28,11 +36,14 @@ namespace OffSyncPasswordManager
         public Main()
         {
             InitializeComponent();
+            Instance = this;
             Credentials = new List<string>();
+            FilteredCreds = new List<string>();
             UniqueUsernames = new List<string>();
             Master.InitializeMasterKeyData();
             InitializeCredentials();
             InitializeFilter();
+            InitializeSettings();
         }
 
         /// <summary>
@@ -42,15 +53,27 @@ namespace OffSyncPasswordManager
         /// <param name="e"></param>
         private void EncryptButton_Click(object sender, EventArgs e)
         {
-            if (editing) 
+            if (editing)
             {
                 int index = CredDescriptions.SelectedIndex;
                 string[] encryptedCreds = AesEncryption.EncryptString(CredDesc.Text + "|" + Username.Text + "|" + Original.Text, Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, Master.AuthKey);
-
-                Credentials.RemoveAt(index);
-                CredDescriptions.Items.RemoveAt(index);
-                Usernames.Items.RemoveAt(index);
-                InsertCredential(index, encryptedCreds[0], encryptedCreds[4]);
+                if (filtering)
+                {
+                    string cred = FilteredCreds[index];
+                    int credIndex = Credentials.IndexOf(cred);
+                    Credentials.Remove(cred);
+                    InsertCredential(credIndex, encryptedCreds[0], encryptedCreds[4]);
+                    disableKeywordTrigger = true;
+                    FilterCredentials();
+                    disableKeywordTrigger = false;
+                }
+                else
+                {
+                    Credentials.RemoveAt(index);
+                    CredDescriptions.Items.RemoveAt(index);
+                    Usernames.Items.RemoveAt(index);
+                    InsertCredential(index, encryptedCreds[0], encryptedCreds[4]);
+                }
                 StopEditing();
             }
             else
@@ -105,6 +128,10 @@ namespace OffSyncPasswordManager
             {
                 string[] storedData = File.ReadAllLines(pwordsFile);
                 string[] split = storedData[Usernames.SelectedIndex].Split('|');
+                if (FilteredCreds.Count > 0)
+                {
+                    split = FilteredCreds[Usernames.SelectedIndex].Split('|');
+                }
                 string encryptedCreds = split[0];
                 string authKey = split[1];
                 string decryptedCredsData = AesEncryption.DecryptToString(Convert.FromBase64String(encryptedCreds), Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, authKey);
@@ -112,6 +139,11 @@ namespace OffSyncPasswordManager
                 return credsSplit[2];
             }
             return "";
+        }
+
+        private string GetUsername()
+        {
+            return Usernames.SelectedItem.ToString();
         }
 
         /// <summary>
@@ -146,6 +178,52 @@ namespace OffSyncPasswordManager
                 return credsSplit;
             }
             return new string[0];
+        }
+
+        private void InitializeSettings()
+        {
+            try
+            {
+                Settings = new string[2];
+                //Settings[0] = "timeout=60";
+                //Settings[1] = "defFilter=All";
+
+                if (File.Exists(settingsFile))
+                {
+                    string[] settings = File.ReadAllLines(settingsFile);
+                    for (int i = 0; i < settings.Length; i++)
+                    {
+                        Settings[i] = settings[i];
+                    }
+                }
+                else
+                {
+                    Settings[0] = "timeout=60";
+                    Settings[1] = "defFilter=All";
+                    SaveSettings();
+                }
+
+                defLockTime = int.Parse(Settings[0].Split('=')[1]);
+                string filter = Settings[1].Split('=')[1];
+                if (!UsernameFilter.Items.Contains(filter))
+                {
+                    disableKeywordTrigger = true;
+                    UsernameFilter.SelectedItem = "[keyword]";
+                    keywordFilter = filter;
+                    FilterCredentials();
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+            disableKeywordTrigger = false;
+        }
+
+        public void SaveSettings()
+        {
+            File.WriteAllLines(settingsFile, Settings);
+            InitializeSettings();
         }
 
         /// <summary>
@@ -188,21 +266,69 @@ namespace OffSyncPasswordManager
 
         private void FilterCredentials()
         {
+            bool checkDescs = false;
             filtering = false;
             PopulateCredentials(Credentials);
             if ((string)UsernameFilter.SelectedItem != "All")
             {
                 filtering = true;
+                if ((string)UsernameFilter.SelectedItem == "[keyword]")
+                {
+                    checkDescs = true;
+                    if (!disableKeywordTrigger)
+                    {
+                        KeywordFilter keyFilt = new KeywordFilter();
+                        keyFilt.ShowDialog();
+                        Settings[1] = "defFilter=" + keywordFilter;
+                    }
+                    else
+                    {
+                        if (keywordFilter != "")
+                        {
+                            Settings[1] = "defFilter=" + keywordFilter;
+                        }
+                    }
+                }
+
                 List<string> creds = new List<string>();
                 for (int i = 0; i < Usernames.Items.Count; i++)
                 {
-                    string name = (string)Usernames.Items[i];
-                    if (name == (string)UsernameFilter.SelectedItem)
+                    if (checkDescs)
                     {
-                        creds.Add(Credentials[i]);
+                        string[] filters = keywordFilter.Split(',');
+                        string desc = (string)CredDescriptions.Items[i];
+                        foreach (string filter in filters)
+                        {
+                            if (desc.ToUpper().Contains(filter.ToUpper()) && !creds.Contains(Credentials[i]))
+                            {
+                                creds.Add(Credentials[i]);
+                            }
+                        }
+
+                        string name = (string)Usernames.Items[i];
+                        foreach (string filter in filters)
+                        {
+                            if (name.ToUpper().Contains(filter.ToUpper()) && !creds.Contains(Credentials[i]))
+                            {
+                                creds.Add(Credentials[i]);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        string name = (string)Usernames.Items[i];
+                        if (name == ((string)UsernameFilter.SelectedItem))
+                        {
+                            creds.Add(Credentials[i]);
+                        }
                     }
                 }
+                FilteredCreds = creds;
                 PopulateCredentials(creds);
+            }
+            else
+            {
+                FilteredCreds.Clear();
             }
         }
 
@@ -223,10 +349,12 @@ namespace OffSyncPasswordManager
                 UniqueUsernames.Add(user);
                 UsernameFilter.Items.Add(user);
             }
+            PopulateCredentials(Credentials);
             if (filtering)
             {
-                PopulateCredentials(Credentials);
+                disableKeywordTrigger = true;
                 FilterCredentials();
+                disableKeywordTrigger = false;
             }
 
             string[] items = new string[Credentials.Count];
@@ -239,8 +367,17 @@ namespace OffSyncPasswordManager
             string desc = CredDesc.Text;
             string user = Username.Text;
             Credentials.Insert(index, encryptedCreds + "|" + authKey);
-            CredDescriptions.Items.Insert(index, desc);
-            Usernames.Items.Insert(index, user);
+            if (filtering)
+            {
+                disableKeywordTrigger = true;
+                FilterCredentials();
+                disableKeywordTrigger = false;
+            }
+            else
+            {
+                CredDescriptions.Items.Insert(index, desc);
+                Usernames.Items.Insert(index, user);
+            }
 
             string[] items = new string[Credentials.Count];
             Credentials.CopyTo(items, 0);
@@ -366,18 +503,7 @@ namespace OffSyncPasswordManager
         {
             if (e.Button == MouseButtons.Right)
             {
-                if (locked)
-                    return;
-                if (CredDescriptions.SelectedItem != null)
-                {
-                    StartEditing();
-                    int index = Usernames.SelectedIndex;
-                    CredDescriptions.SelectedIndex = index;
-
-                    CredDesc.Text = CredDescriptions.SelectedItem.ToString();
-                    Username.Text = Usernames.SelectedItem.ToString();
-                    Original.Text = GetPassword();
-                }
+                RightClickCreds(true);
             }
             else
             {
@@ -406,18 +532,7 @@ namespace OffSyncPasswordManager
         {
             if (e.Button == MouseButtons.Right)
             {
-                if (locked)
-                    return;
-                if (CredDescriptions.SelectedItem != null)
-                {
-                    StartEditing();
-                    int index = CredDescriptions.SelectedIndex;
-                    Usernames.SelectedIndex = index;
-
-                    CredDesc.Text = CredDescriptions.SelectedItem.ToString();
-                    Username.Text = Usernames.SelectedItem.ToString();
-                    Original.Text = GetPassword();
-                }
+                RightClickCreds(false);
             }
             else
             {
@@ -442,6 +557,38 @@ namespace OffSyncPasswordManager
             }
         }
 
+        private void RightClickCreds(bool usernameClicked)
+        {
+            if (locked)
+                return;
+            if (CredDescriptions.SelectedItem != null)
+            {
+                StartEditing();
+                int index = -1;
+                if (usernameClicked) 
+                {
+                    index = Usernames.SelectedIndex; 
+                }
+                else
+                {
+                    index = CredDescriptions.SelectedIndex;
+                }
+
+                if (usernameClicked)
+                {
+                    CredDescriptions.SelectedIndex = index;
+                }
+                else
+                {
+                    Usernames.SelectedIndex = index;
+                }
+
+                CredDesc.Text = CredDescriptions.SelectedItem.ToString();
+                Username.Text = Usernames.SelectedItem.ToString();
+                Original.Text = GetPassword();
+            }
+        }
+
         private void StartEditing()
         {
             editing = true;
@@ -460,20 +607,32 @@ namespace OffSyncPasswordManager
         private void clearSelectedCredentialsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int index = Usernames.SelectedIndex;
-            Credentials.RemoveAt(index);
-            Usernames.Items.RemoveAt(index);
-            CredDescriptions.Items.RemoveAt(index);
+            if (filtering)
+            {
+                string cred = FilteredCreds[index];
+                Credentials.Remove(cred);
+                disableKeywordTrigger = true;
+                FilterCredentials();
+                disableKeywordTrigger = false;
+            }
+            else
+            {
+                Credentials.RemoveAt(index);
+                Usernames.Items.RemoveAt(index);
+                CredDescriptions.Items.RemoveAt(index);
+            }
             File.WriteAllLines(pwordsFile, Credentials);
         }
 
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SaveSettings();
             Application.Exit();
         }
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
         {
-
+            SaveSettings();
         }
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -580,6 +739,12 @@ namespace OffSyncPasswordManager
         private void UsernameFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             FilterCredentials();
+        }
+
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings settingsWindow = new Settings();
+            settingsWindow.ShowDialog();
         }
     }
 }

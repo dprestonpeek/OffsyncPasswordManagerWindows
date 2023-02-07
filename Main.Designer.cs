@@ -49,6 +49,8 @@ namespace OffSyncPasswordManager
             this.clearPasswordsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearAllPasswordsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearSelectedCredentialsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -196,7 +198,9 @@ namespace OffSyncPasswordManager
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.changeMasterPasswordToolStripMenuItem,
-            this.clearPasswordsToolStripMenuItem});
+            this.clearPasswordsToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.optionsToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
@@ -230,6 +234,18 @@ namespace OffSyncPasswordManager
             this.clearSelectedCredentialsToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.clearSelectedCredentialsToolStripMenuItem.Text = "Clear Selected Credentials";
             this.clearSelectedCredentialsToolStripMenuItem.Click += new System.EventHandler(this.clearSelectedCredentialsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(204, 6);
+            // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.optionsToolStripMenuItem.Text = "Options";
+            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -381,7 +397,8 @@ namespace OffSyncPasswordManager
             this.UsernameFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.UsernameFilter.FormattingEnabled = true;
             this.UsernameFilter.Items.AddRange(new object[] {
-            "All"});
+            "All",
+            "[keyword]"});
             this.UsernameFilter.Location = new System.Drawing.Point(282, 203);
             this.UsernameFilter.Name = "UsernameFilter";
             this.UsernameFilter.Size = new System.Drawing.Size(165, 23);
@@ -466,6 +483,8 @@ namespace OffSyncPasswordManager
         private System.Windows.Forms.Button ViewPasswordButton;
         private System.Windows.Forms.ComboBox UsernameFilter;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
     }
 }
 
