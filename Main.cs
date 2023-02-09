@@ -5,6 +5,8 @@ using System.Collections;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
+using System.Drawing;
 
 namespace OffSyncPasswordManager
 {
@@ -33,6 +35,14 @@ namespace OffSyncPasswordManager
         private bool locked = false;
         private bool editing = false;
         private bool filtering = false;
+
+        //Used for mouse scroll actions
+        [DllImport("user32.dll")]
+        private static extern IntPtr WindowFromPoint(Point pt);
+        [DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
+
+
         public Main()
         {
             InitializeComponent();
@@ -44,6 +54,34 @@ namespace OffSyncPasswordManager
             InitializeCredentials();
             InitializeFilter();
             InitializeSettings();
+
+            Usernames.MouseWheel += Usernames_MouseWheel;
+            CredDescriptions.MouseWheel += CredDescriptions_MouseWheel;
+        }
+
+        private void CredDescriptions_MouseWheel(object sender, MouseEventArgs e)
+        {
+            //if (e.Delta > 0)
+            //{
+            //    Usernames.TopIndex = CredDescriptions.TopIndex - 1;
+            //}
+            //else
+            //{
+            //    int visibleItems = CredDescriptions.ClientSize.Height / CredDescriptions.ItemHeight;
+            //    Usernames.TopIndex = CredDescriptions.TopIndex + 1;
+            //}
+        }
+
+        private void Usernames_MouseWheel(object sender, MouseEventArgs e)
+        {
+            //if (e.Delta > 0)
+            //{
+            //    CredDescriptions.TopIndex = Usernames.TopIndex - 1;
+            //}
+            //else
+            //{
+            //    CredDescriptions.TopIndex = Usernames.TopIndex + 1;
+            //}
         }
 
         /// <summary>
@@ -61,6 +99,7 @@ namespace OffSyncPasswordManager
                 {
                     string cred = FilteredCreds[index];
                     int credIndex = Credentials.IndexOf(cred);
+                    string cleartext = DecryptPassword();
                     Credentials.Remove(cred);
                     InsertCredential(credIndex, encryptedCreds[0], encryptedCreds[4]);
                     disableKeywordTrigger = true;
@@ -124,13 +163,17 @@ namespace OffSyncPasswordManager
         /// <returns></returns>
         private string DecryptPassword()
         {
+            return DecryptPassword(Usernames.SelectedIndex);
+        }
+        private string DecryptPassword(int index)
+        {
             if (Master.KeyDataNotEmpty() && Usernames.SelectedItems.Count == 1)
             {
                 string[] storedData = File.ReadAllLines(pwordsFile);
-                string[] split = storedData[Usernames.SelectedIndex].Split('|');
+                string[] split = storedData[index].Split('|');
                 if (FilteredCreds.Count > 0)
                 {
-                    split = FilteredCreds[Usernames.SelectedIndex].Split('|');
+                    split = FilteredCreds[index].Split('|');
                 }
                 string encryptedCreds = split[0];
                 string authKey = split[1];
@@ -279,7 +322,10 @@ namespace OffSyncPasswordManager
                     {
                         KeywordFilter keyFilt = new KeywordFilter();
                         keyFilt.ShowDialog();
-                        Settings[1] = "defFilter=" + keywordFilter;
+                        if (keywordFilter != "")
+                        {
+                            Settings[1] = "defFilter=" + keywordFilter;
+                        }
                     }
                     else
                     {
@@ -639,6 +685,13 @@ namespace OffSyncPasswordManager
         {
             Process.Start("OffSyncUpdateRepair.exe");
             Application.Exit();
+        }
+
+        private void Quit()
+        {
+            confirm.Dispose();
+            changeKey.Dispose();
+            about.Dispose();
         }
 
         private void exportPasswordsToolStripMenuItem_Click(object sender, EventArgs e)

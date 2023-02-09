@@ -70,6 +70,11 @@ namespace OffSyncPasswordManager
             {
                 Application.Exit();
             }
+            else
+            {
+                main.Dispose();
+                Application.Exit();
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
