@@ -97,9 +97,12 @@ namespace OffSyncPasswordManager
 
         public static bool KeyMatches(string toMatch)
         {
-            if (toMatch.Equals(Key))
+            if (toMatch != null)
             {
-                return true;
+                if (toMatch.Equals(Key))
+                {
+                    return true;
+                }
             }
             return false;
         }

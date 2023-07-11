@@ -17,6 +17,7 @@ namespace OffSyncPasswordManager
         ConfirmationWindow confirm;
         ChangeKey changeKey;
         About about;
+        ErrorWindow error;
         List<string> Credentials;
         List<string> FilteredCreds;
         List<string> UniqueUsernames;
@@ -255,8 +256,11 @@ namespace OffSyncPasswordManager
                 string encryptedCreds = split[0];
                 string authKey = split[1];
                 string decryptedCredsData = AesEncryption.DecryptToString(Convert.FromBase64String(encryptedCreds), Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, authKey);
-                string[] credsSplit = decryptedCredsData.Split('|');
-                return credsSplit;
+                if (decryptedCredsData != null)
+                {
+                    string[] credsSplit = decryptedCredsData.Split('|');
+                    return credsSplit;
+                }
             }
             return new string[0];
         }
@@ -776,9 +780,17 @@ namespace OffSyncPasswordManager
                 {
                     Credentials.Add(line);
                     string[] decryptedCreds = DecryptCredentials(line);
-
-                    CredDescriptions.Items.Add(decryptedCreds[0]);
-                    Usernames.Items.Add(decryptedCreds[1]);
+                    if (decryptedCreds.Length > 0)
+                    {
+                        CredDescriptions.Items.Add(decryptedCreds[0]);
+                        Usernames.Items.Add(decryptedCreds[1]);
+                    }
+                    else
+                    {
+                        error = new ErrorWindow();
+                        error.ShowDialog();
+                        return;
+                    }
                 }
             }
 

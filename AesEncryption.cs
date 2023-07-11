@@ -144,9 +144,16 @@ namespace OffSyncPasswordManager
             {
                 using (var encryptor = aes.CreateDecryptor(key, iv))
                 {
-                    var decryptedBytes = encryptor
-                        .TransformFinalBlock(encryptedData, cipherTextIndex, cipherTextLength);
-                    return StringEncoding.GetString(decryptedBytes);
+                    try
+                    {
+                        var decryptedBytes = encryptor
+                            .TransformFinalBlock(encryptedData, cipherTextIndex, cipherTextLength);
+                        return StringEncoding.GetString(decryptedBytes);
+                    }
+                    catch(Exception ex)
+                    {
+                        return null;
+                    }
                 }
             }
         }
