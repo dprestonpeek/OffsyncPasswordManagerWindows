@@ -54,7 +54,7 @@ namespace OffSyncPasswordManager
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(117, 15);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Version 2023.02.07.01";
+            this.label2.Text = "Version 2023.07.11.00";
             // 
             // label3
             // 

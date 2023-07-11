@@ -68,6 +68,8 @@ namespace OffSyncPasswordManager
             this.lockTimer = new System.Windows.Forms.Timer(this.components);
             this.UsernameFilter = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.PassCopyLabel = new System.Windows.Forms.Label();
+            this.UserCopyLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -78,6 +80,7 @@ namespace OffSyncPasswordManager
             // 
             // EncryptButton
             // 
+            this.EncryptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.EncryptButton.Location = new System.Drawing.Point(319, 141);
             this.EncryptButton.Name = "EncryptButton";
             this.EncryptButton.Size = new System.Drawing.Size(110, 23);
@@ -116,7 +119,9 @@ namespace OffSyncPasswordManager
             // 
             // CredDescriptions
             // 
-            this.CredDescriptions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CredDescriptions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.CredDescriptions.FormattingEnabled = true;
             this.CredDescriptions.ItemHeight = 15;
             this.CredDescriptions.Location = new System.Drawing.Point(0, 0);
@@ -129,7 +134,6 @@ namespace OffSyncPasswordManager
             // 
             // label4
             // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(12, 209);
             this.label4.Name = "label4";
@@ -307,7 +311,9 @@ namespace OffSyncPasswordManager
             // 
             // Usernames
             // 
-            this.Usernames.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Usernames.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.Usernames.FormattingEnabled = true;
             this.Usernames.ItemHeight = 15;
             this.Usernames.Location = new System.Drawing.Point(0, 0);
@@ -346,6 +352,8 @@ namespace OffSyncPasswordManager
             // 
             // groupBox1
             // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.ViewPasswordButton);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label2);
@@ -389,15 +397,15 @@ namespace OffSyncPasswordManager
             // lockTimer
             // 
             this.lockTimer.Enabled = true;
-            this.lockTimer.Interval = 1000;
             this.lockTimer.Tick += new System.EventHandler(this.lockTimer_Tick);
             // 
             // UsernameFilter
             // 
+            this.UsernameFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.UsernameFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.UsernameFilter.FormattingEnabled = true;
             this.UsernameFilter.Items.AddRange(new object[] {
-            "All",
+            "[all]",
             "[keyword]"});
             this.UsernameFilter.Location = new System.Drawing.Point(282, 203);
             this.UsernameFilter.Name = "UsernameFilter";
@@ -407,7 +415,7 @@ namespace OffSyncPasswordManager
             // 
             // label5
             // 
-            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(216, 209);
             this.label5.Name = "label5";
@@ -415,12 +423,36 @@ namespace OffSyncPasswordManager
             this.label5.TabIndex = 21;
             this.label5.Text = "Filter:";
             // 
+            // PassCopyLabel
+            // 
+            this.PassCopyLabel.AutoSize = true;
+            this.PassCopyLabel.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.PassCopyLabel.Location = new System.Drawing.Point(12, 436);
+            this.PassCopyLabel.Name = "PassCopyLabel";
+            this.PassCopyLabel.Size = new System.Drawing.Size(110, 15);
+            this.PassCopyLabel.TabIndex = 22;
+            this.PassCopyLabel.Text = "Password Copied ✓";
+            this.PassCopyLabel.Visible = false;
+            // 
+            // UserCopyLabel
+            // 
+            this.UserCopyLabel.AutoSize = true;
+            this.UserCopyLabel.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.UserCopyLabel.Location = new System.Drawing.Point(139, 436);
+            this.UserCopyLabel.Name = "UserCopyLabel";
+            this.UserCopyLabel.Size = new System.Drawing.Size(113, 15);
+            this.UserCopyLabel.TabIndex = 23;
+            this.UserCopyLabel.Text = "Username Copied ✓";
+            this.UserCopyLabel.Visible = false;
+            // 
             // Main
             // 
             this.AcceptButton = this.EncryptButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(459, 457);
+            this.Controls.Add(this.UserCopyLabel);
+            this.Controls.Add(this.PassCopyLabel);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.UsernameFilter);
             this.Controls.Add(this.groupBox1);
@@ -485,6 +517,8 @@ namespace OffSyncPasswordManager
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+        private System.Windows.Forms.Label PassCopyLabel;
+        private System.Windows.Forms.Label UserCopyLabel;
     }
 }
 

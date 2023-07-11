@@ -28,17 +28,28 @@ namespace OffSyncPasswordManager
         private static string settingsFile = "settings.txt";
 
         public string keywordFilter = "";
+        private string loadedKeyword = "";
+        private string prevKeyword = "";
+        private bool initKeyword = false;
         private bool disableKeywordTrigger = false;
 
         private int defLockTime = 60;
         private int lockTime = 0;
         private bool locked = false;
+        private bool shouldLock { get { return lockTime > defLockTime * 10; } set { shouldLock = value; } }
         private bool editing = false;
         private bool filtering = false;
+        private bool wait = false;
+        private bool getPassword = false;
+
+        public bool userCopied = false;
+        public bool passCopied = false;
+        private int clearTimer = 0;
+        private int clearTime = 50;
 
         //Used for mouse scroll actions
         [DllImport("user32.dll")]
-        private static extern IntPtr WindowFromPoint(Point pt);
+        private static extern IntPtr WindowFromPoint(System.Drawing.Point pt);
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
 
@@ -142,7 +153,7 @@ namespace OffSyncPasswordManager
         /// <param name="e"></param>
         private void DecryptButton_Click(object sender, EventArgs e)
         {
-            if (lockTime > defLockTime)
+            if (shouldLock)
             {
                 if (!locked)
                 {
@@ -153,7 +164,7 @@ namespace OffSyncPasswordManager
             }
             else
             {
-                CopyPassword();
+                CopyCredentials();
             }
         }
 
@@ -184,9 +195,36 @@ namespace OffSyncPasswordManager
             return "";
         }
 
-        private string GetUsername()
+        public string GetUsername()
         {
             return Usernames.SelectedItem.ToString();
+        }
+
+        /// <summary>
+        /// Copies the selected account username to clipboard if the app is not locked
+        /// </summary>
+        public void CopyCredentials()
+        {
+            if (!locked)
+            {
+                if (passCopied && !userCopied)
+                {
+                    Clipboard.SetText(GetUsername());
+                    userCopied = true;
+                }
+                else
+                {
+                    if (userCopied)
+                    {
+                        passCopied = false;
+                        userCopied = false;
+                    }
+                    Clipboard.SetText(GetPassword());
+                    passCopied = true;
+                }
+                //getPassword = true;
+                //wait = true;
+            }
         }
 
         /// <summary>
@@ -196,11 +234,11 @@ namespace OffSyncPasswordManager
         {
             if (!locked)
             {
-                Clipboard.SetText(DecryptPassword());
+                Clipboard.SetText(GetPassword());
             }
         }
 
-        private string GetPassword()
+        public string GetPassword()
         {
             if (!locked)
             {
@@ -228,8 +266,6 @@ namespace OffSyncPasswordManager
             try
             {
                 Settings = new string[2];
-                //Settings[0] = "timeout=60";
-                //Settings[1] = "defFilter=All";
 
                 if (File.Exists(settingsFile))
                 {
@@ -248,18 +284,28 @@ namespace OffSyncPasswordManager
 
                 defLockTime = int.Parse(Settings[0].Split('=')[1]);
                 string filter = Settings[1].Split('=')[1];
-                if (!UsernameFilter.Items.Contains(filter))
+                if (UsernameFilter.Items.Contains(filter))
+                {
+                    UsernameFilter.SelectedItem = filter;
+                    keywordFilter = filter;
+                    loadedKeyword = filter;
+                    FilterCredentials();
+                    Settings[1] = "defFilter=" + keywordFilter;
+                }
+                else 
                 {
                     disableKeywordTrigger = true;
                     UsernameFilter.SelectedItem = "[keyword]";
                     keywordFilter = filter;
                     FilterCredentials();
+                    Settings[1] = "defFilter=" + keywordFilter;
                 }
             }
             catch(Exception ex)
             {
 
             }
+            initKeyword = true;
             disableKeywordTrigger = false;
         }
 
@@ -312,7 +358,7 @@ namespace OffSyncPasswordManager
             bool checkDescs = false;
             filtering = false;
             PopulateCredentials(Credentials);
-            if ((string)UsernameFilter.SelectedItem != "All")
+            if ((string)UsernameFilter.SelectedItem != "[all]")
             {
                 filtering = true;
                 if ((string)UsernameFilter.SelectedItem == "[keyword]")
@@ -321,7 +367,14 @@ namespace OffSyncPasswordManager
                     if (!disableKeywordTrigger)
                     {
                         KeywordFilter keyFilt = new KeywordFilter();
+                        keyFilt.Keyword.Text = loadedKeyword;
                         keyFilt.ShowDialog();
+                        if (keywordFilter == "[cancel]")
+                        {
+                            keywordFilter = prevKeyword;
+                            UsernameFilter.SelectedItem = prevKeyword;
+                            return;
+                        }
                         if (keywordFilter != "")
                         {
                             Settings[1] = "defFilter=" + keywordFilter;
@@ -375,6 +428,7 @@ namespace OffSyncPasswordManager
             else
             {
                 FilteredCreds.Clear();
+                UsernameFilter.SelectedItem = "[all]";
             }
         }
 
@@ -559,7 +613,7 @@ namespace OffSyncPasswordManager
 
         private void Usernames_DoubleClick(object sender, EventArgs e)
         {
-            if (lockTime > defLockTime)
+            if (shouldLock)
             {
                 if (!locked)
                 {
@@ -570,7 +624,7 @@ namespace OffSyncPasswordManager
             }
             else
             {
-                CopyPassword();
+                CopyCredentials();
             }
         }
 
@@ -588,7 +642,9 @@ namespace OffSyncPasswordManager
 
         private void CredDescriptions_DoubleClick(object sender, EventArgs e)
         {
-            if (lockTime > defLockTime)
+            passCopied = false;
+            userCopied = false;
+            if (shouldLock)
             {
                 if (!locked)
                 {
@@ -599,7 +655,7 @@ namespace OffSyncPasswordManager
             }
             else
             {
-                CopyPassword();
+                CopyCredentials();
             }
         }
 
@@ -756,9 +812,10 @@ namespace OffSyncPasswordManager
             Hide();
         }
 
-        private void lockTimer_Tick(object sender, EventArgs e)
+        private async void lockTimer_Tick(object sender, EventArgs e)
         {
-            if (ActiveForm != this)
+            if (ActiveForm != this && ActiveForm != ChangeKey.ActiveForm && ActiveForm != ConfirmationWindow.ActiveForm
+                && ActiveForm != About.ActiveForm && ActiveForm != KeywordFilter.ActiveForm)
             {
                 if (!locked)
                 {
@@ -767,7 +824,7 @@ namespace OffSyncPasswordManager
             }
             else
             {
-                if (lockTime > defLockTime)
+                if (shouldLock)
                 {
                     if (!locked)
                     {
@@ -777,6 +834,23 @@ namespace OffSyncPasswordManager
                     }
                 }
             }
+            if (userCopied || passCopied)
+            {
+                if (clearTimer < clearTime)
+                {
+                    clearTimer++;
+                }
+                else
+                {
+                    clearTimer = 0;
+                    userCopied = false;
+                    passCopied = false;
+                    PassCopyLabel.Visible = false;
+                    UserCopyLabel.Visible = false;
+                }
+            }
+            UserCopyLabel.Visible = userCopied;
+            PassCopyLabel.Visible = passCopied;
         }
 
         private void ViewPasswordButton_MouseDown(object sender, MouseEventArgs e)
@@ -791,7 +865,21 @@ namespace OffSyncPasswordManager
 
         private void UsernameFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (initKeyword)
+            {
+                UpdateUsernameFilter();
+            }
+        }
+
+        private void UpdateUsernameFilter()
+        {
+            prevKeyword = keywordFilter;
+            keywordFilter = UsernameFilter.SelectedItem.ToString();
             FilterCredentials();
+            if (Settings != null)
+            {
+                Settings[1] = "defFilter=" + keywordFilter;
+            }
         }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)

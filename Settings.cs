@@ -19,6 +19,7 @@ namespace OffSyncPasswordManager
         private void SaveButton_Click(object sender, EventArgs e)
         {
             Main.Instance.Settings[0] = "timeout=" + SessionTimeoutValue.Value.ToString();
+            Main.Instance.Settings[1] = "defFilter=" + Main.Instance.keywordFilter;
             Main.Instance.SaveSettings();
             Close();
         }

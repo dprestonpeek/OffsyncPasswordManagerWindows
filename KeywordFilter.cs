@@ -10,6 +10,7 @@ namespace OffSyncPasswordManager
 {
     public partial class KeywordFilter : Form
     {
+        bool keywordSet = false;
         public KeywordFilter()
         {
             InitializeComponent();
@@ -18,7 +19,16 @@ namespace OffSyncPasswordManager
         private void SetFilter_Click(object sender, EventArgs e)
         {
             Main.Instance.keywordFilter = Keyword.Text;
+            keywordSet = true;
             Close();
+        }
+
+        private void KeywordFilter_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (!keywordSet)
+            {
+                Main.Instance.keywordFilter = "[cancel]";
+            }
         }
     }
 }

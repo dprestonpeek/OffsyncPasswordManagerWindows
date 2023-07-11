@@ -73,6 +73,7 @@ namespace OffSyncPasswordManager
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "KeywordFilter";
             this.Text = "Keyword Filter";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.KeywordFilter_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -81,7 +82,7 @@ namespace OffSyncPasswordManager
         #endregion
 
         private System.Windows.Forms.Button SetFilter;
-        private System.Windows.Forms.TextBox Keyword;
+        public System.Windows.Forms.TextBox Keyword;
         private System.Windows.Forms.Label label1;
     }
 }
