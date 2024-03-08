@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+﻿//using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -170,17 +170,17 @@ namespace OffSyncPasswordManager
         {
             var keyBytes = StringEncoding.GetBytes(password);
 
-            //using (var derivator = new Rfc2898DeriveBytes(
-            //    keyBytes, passwordSalt,
-            //    PasswordIterationCount, HashAlgorithmName.SHA256))
-            //{
-            //    return derivator.GetBytes(PasswordByteSize);
-            //}
+            using (var derivator = new Rfc2898DeriveBytes(
+                keyBytes, passwordSalt,
+                PasswordIterationCount, HashAlgorithmName.SHA256))
+            {
+                return derivator.GetBytes(PasswordByteSize);
+            }
 
-            byte[] derivator = KeyDerivation.Pbkdf2(
-                password, passwordSalt, KeyDerivationPrf.HMACSHA256,
-                PasswordIterationCount, PasswordByteSize);
-            return derivator;
+            //byte[] derivator = KeyDerivation.Pbkdf2(
+            //    password, passwordSalt, KeyDerivationPrf.HMACSHA256,
+            //    PasswordIterationCount, PasswordByteSize);
+            //return derivator;
         }
 
         private static byte[] GenerateRandomBytes(int numberOfBytes)

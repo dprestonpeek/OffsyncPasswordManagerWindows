@@ -10,9 +10,10 @@ namespace OffSyncPasswordManager
 {
     public partial class ErrorWindow : Form
     {
-        public ErrorWindow()
+        public ErrorWindow(string errorMessage)
         {
             InitializeComponent();
+            ErrorMessage.Text = errorMessage;
         }
 
         private void ErrorOK_Click(object sender, EventArgs e)

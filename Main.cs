@@ -45,6 +45,7 @@ namespace OffSyncPasswordManager
 
         public bool userCopied = false;
         public bool passCopied = false;
+        private int copiedCred = -1;
         private int clearTimer = 0;
         private int clearTime = 50;
 
@@ -208,7 +209,7 @@ namespace OffSyncPasswordManager
         {
             if (!locked)
             {
-                if (passCopied && !userCopied)
+                if (Usernames.SelectedIndex == copiedCred && passCopied && !userCopied)
                 {
                     Clipboard.SetText(GetUsername());
                     userCopied = true;
@@ -221,6 +222,7 @@ namespace OffSyncPasswordManager
                         userCopied = false;
                     }
                     Clipboard.SetText(GetPassword());
+                    copiedCred = Usernames.SelectedIndex;
                     passCopied = true;
                 }
                 //getPassword = true;
@@ -570,7 +572,7 @@ namespace OffSyncPasswordManager
             int digits = 0;
             int specials = 0;
 
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < 16; i++)
             {
                 char code = (char)rand.Next(33, 126);
                 char next = code;
@@ -590,7 +592,11 @@ namespace OffSyncPasswordManager
                     password += next;
                     lowLetters++;
                 }
-                else if (((code == 33) || (code >= 35 && code <= 43) || (code >= 45 && code <= 47)) && specials < 2)
+                else if (code == 124)
+                {
+                    code = (char)125;
+                }
+                else if (((code == 33) || (code >= 35 && code <= 43) || (code >= 45 && code <= 47)) && specials < 3)
                 {
                     password += next;
                     specials++;
@@ -646,8 +652,8 @@ namespace OffSyncPasswordManager
 
         private void CredDescriptions_DoubleClick(object sender, EventArgs e)
         {
-            passCopied = false;
-            userCopied = false;
+            //passCopied = false;
+            //userCopied = false;
             if (shouldLock)
             {
                 if (!locked)
@@ -787,7 +793,7 @@ namespace OffSyncPasswordManager
                     }
                     else
                     {
-                        error = new ErrorWindow();
+                        error = new ErrorWindow("Cannot import passwords that were exported using a different master key.");
                         error.ShowDialog();
                         return;
                     }
@@ -826,8 +832,8 @@ namespace OffSyncPasswordManager
 
         private async void lockTimer_Tick(object sender, EventArgs e)
         {
-            if (ActiveForm != this && ActiveForm != ChangeKey.ActiveForm && ActiveForm != ConfirmationWindow.ActiveForm
-                && ActiveForm != About.ActiveForm && ActiveForm != KeywordFilter.ActiveForm)
+            if ((ActiveForm != this && ActiveForm != ChangeKey.ActiveForm && ActiveForm != ConfirmationWindow.ActiveForm
+                && ActiveForm != About.ActiveForm && ActiveForm != KeywordFilter.ActiveForm) || ActiveForm == null)
             {
                 if (!locked)
                 {

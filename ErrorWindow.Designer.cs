@@ -30,29 +30,9 @@ namespace OffSyncPasswordManager
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ErrorWindow));
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.ErrorOK = new System.Windows.Forms.Button();
+            this.ErrorMessage = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(49, 31);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(277, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Cannot import passwords that were exported using";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(124, 46);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(127, 15);
-            this.label2.TabIndex = 1;
-            this.label2.Text = " a different master key.";
             // 
             // ErrorOK
             // 
@@ -64,14 +44,24 @@ namespace OffSyncPasswordManager
             this.ErrorOK.UseVisualStyleBackColor = true;
             this.ErrorOK.Click += new System.EventHandler(this.ErrorOK_Click);
             // 
+            // ErrorMessage
+            // 
+            this.ErrorMessage.Location = new System.Drawing.Point(49, 26);
+            this.ErrorMessage.Multiline = true;
+            this.ErrorMessage.Name = "ErrorMessage";
+            this.ErrorMessage.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.ErrorMessage.Size = new System.Drawing.Size(277, 58);
+            this.ErrorMessage.TabIndex = 3;
+            this.ErrorMessage.Text = "Cannot import passwords that were exported using a different master key.";
+            this.ErrorMessage.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // ErrorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(363, 140);
+            this.Controls.Add(this.ErrorMessage);
             this.Controls.Add(this.ErrorOK);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ErrorWindow";
             this.Text = "Error!";
@@ -81,9 +71,7 @@ namespace OffSyncPasswordManager
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button ErrorOK;
+        private System.Windows.Forms.TextBox ErrorMessage;
     }
 }

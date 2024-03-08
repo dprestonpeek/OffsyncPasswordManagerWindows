@@ -12,6 +12,7 @@ namespace OffSyncPasswordManager
     {
         Main main;
         ChangeKey changeKey;
+        ErrorWindow error;
         public bool prevent = true;
         public EnterMasterKey()
         {
@@ -37,6 +38,8 @@ namespace OffSyncPasswordManager
             {
                 Master.Key = "";
                 prevent = true;
+                error = new ErrorWindow(ex.Message);
+                error.ShowDialog();
             }
             MasterKeyEntry.Text = "";
         }
