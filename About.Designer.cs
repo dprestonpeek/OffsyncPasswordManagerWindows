@@ -50,11 +50,11 @@ namespace OffSyncPasswordManager
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(136, 30);
+            this.label2.Location = new System.Drawing.Point(125, 30);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(102, 15);
+            this.label2.Size = new System.Drawing.Size(117, 15);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Version 2024.03.08";
+            this.label2.Text = "Version 2024.03.08.01";
             // 
             // label3
             // 
