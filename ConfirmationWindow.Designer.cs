@@ -30,56 +30,55 @@ namespace OffSyncPasswordManager
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfirmationWindow));
-            this.CancelButton = new System.Windows.Forms.Button();
-            this.ConfirmationText = new System.Windows.Forms.Label();
-            this.OKButton = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            CancelButton = new System.Windows.Forms.Button();
+            ConfirmationText = new System.Windows.Forms.Label();
+            OKButton = new System.Windows.Forms.Button();
+            SuspendLayout();
             // 
             // CancelButton
             // 
-            this.CancelButton.Location = new System.Drawing.Point(190, 76);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton.TabIndex = 2;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            CancelButton.Location = new System.Drawing.Point(190, 76);
+            CancelButton.Name = "CancelButton";
+            CancelButton.Size = new System.Drawing.Size(75, 23);
+            CancelButton.TabIndex = 2;
+            CancelButton.Text = "Cancel";
+            CancelButton.UseVisualStyleBackColor = true;
+            CancelButton.Click += CancelButton_Click;
             // 
             // ConfirmationText
             // 
-            this.ConfirmationText.AutoSize = true;
-            this.ConfirmationText.Location = new System.Drawing.Point(89, 19);
-            this.ConfirmationText.Name = "ConfirmationText";
-            this.ConfirmationText.Size = new System.Drawing.Size(142, 30);
-            this.ConfirmationText.TabIndex = 3;
-            this.ConfirmationText.Text = "Delete all password data? \r\nThis cannot be undone.";
-            this.ConfirmationText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            ConfirmationText.AutoSize = true;
+            ConfirmationText.Location = new System.Drawing.Point(95, 19);
+            ConfirmationText.Name = "ConfirmationText";
+            ConfirmationText.Size = new System.Drawing.Size(131, 30);
+            ConfirmationText.TabIndex = 3;
+            ConfirmationText.Text = "Delete all string data? \r\nThis cannot be undone.";
+            ConfirmationText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // OKButton
             // 
-            this.OKButton.Location = new System.Drawing.Point(52, 76);
-            this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(75, 23);
-            this.OKButton.TabIndex = 4;
-            this.OKButton.Text = "OK";
-            this.OKButton.UseVisualStyleBackColor = true;
-            this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
+            OKButton.Location = new System.Drawing.Point(52, 76);
+            OKButton.Name = "OKButton";
+            OKButton.Size = new System.Drawing.Size(75, 23);
+            OKButton.TabIndex = 4;
+            OKButton.Text = "OK";
+            OKButton.UseVisualStyleBackColor = true;
+            OKButton.Click += OKButton_Click;
             // 
             // ConfirmationWindow
             // 
-            this.AcceptButton = this.CancelButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(309, 111);
-            this.Controls.Add(this.OKButton);
-            this.Controls.Add(this.ConfirmationText);
-            this.Controls.Add(this.CancelButton);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "ConfirmationWindow";
-            this.Text = "Clear all passwords?";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AcceptButton = CancelButton;
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(309, 111);
+            Controls.Add(OKButton);
+            Controls.Add(ConfirmationText);
+            Controls.Add(CancelButton);
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            Name = "ConfirmationWindow";
+            Text = "Clear all strings?";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

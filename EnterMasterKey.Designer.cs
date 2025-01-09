@@ -29,68 +29,67 @@ namespace OffSyncPasswordManager
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EnterMasterKey));
-            this.label1 = new System.Windows.Forms.Label();
-            this.MasterKeyEntry = new System.Windows.Forms.TextBox();
-            this.OKButton = new System.Windows.Forms.Button();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.SuspendLayout();
+            label1 = new System.Windows.Forms.Label();
+            MasterKeyEntry = new System.Windows.Forms.TextBox();
+            OKButton = new System.Windows.Forms.Button();
+            timer1 = new System.Windows.Forms.Timer(components);
+            SuspendLayout();
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(85, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(134, 15);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Please Enter Master Key:";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(85, 9);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(134, 15);
+            label1.TabIndex = 2;
+            label1.Text = "Please Enter Master Key:";
+            label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // MasterKeyEntry
             // 
-            this.MasterKeyEntry.Location = new System.Drawing.Point(12, 42);
-            this.MasterKeyEntry.Name = "MasterKeyEntry";
-            this.MasterKeyEntry.PasswordChar = '*';
-            this.MasterKeyEntry.Size = new System.Drawing.Size(284, 23);
-            this.MasterKeyEntry.TabIndex = 0;
-            this.MasterKeyEntry.UseSystemPasswordChar = true;
+            MasterKeyEntry.Location = new System.Drawing.Point(12, 42);
+            MasterKeyEntry.Name = "MasterKeyEntry";
+            MasterKeyEntry.PasswordChar = '*';
+            MasterKeyEntry.Size = new System.Drawing.Size(284, 23);
+            MasterKeyEntry.TabIndex = 0;
+            MasterKeyEntry.UseSystemPasswordChar = true;
             // 
             // OKButton
             // 
-            this.OKButton.Location = new System.Drawing.Point(115, 71);
-            this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(75, 23);
-            this.OKButton.TabIndex = 1;
-            this.OKButton.Text = "OK";
-            this.OKButton.UseVisualStyleBackColor = true;
-            this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
+            OKButton.Location = new System.Drawing.Point(115, 71);
+            OKButton.Name = "OKButton";
+            OKButton.Size = new System.Drawing.Size(75, 23);
+            OKButton.TabIndex = 1;
+            OKButton.Text = "OK";
+            OKButton.UseVisualStyleBackColor = true;
+            OKButton.Click += OKButton_Click;
             // 
             // timer1
             // 
-            this.timer1.Enabled = true;
-            this.timer1.Interval = 10;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            timer1.Enabled = true;
+            timer1.Interval = 10;
+            timer1.Tick += timer1_Tick;
             // 
             // EnterMasterKey
             // 
-            this.AcceptButton = this.OKButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-            this.ClientSize = new System.Drawing.Size(309, 111);
-            this.Controls.Add(this.OKButton);
-            this.Controls.Add(this.MasterKeyEntry);
-            this.Controls.Add(this.label1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "EnterMasterKey";
-            this.Text = "Enter Master Key";
-            this.TopMost = true;
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AcceptButton = OKButton;
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
+            ClientSize = new System.Drawing.Size(309, 111);
+            Controls.Add(OKButton);
+            Controls.Add(MasterKeyEntry);
+            Controls.Add(label1);
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "EnterMasterKey";
+            Text = "Enter Master Key";
+            TopMost = true;
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

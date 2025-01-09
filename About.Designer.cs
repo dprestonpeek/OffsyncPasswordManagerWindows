@@ -30,77 +30,65 @@ namespace OffSyncPasswordManager
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(About));
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            label1 = new System.Windows.Forms.Label();
+            label2 = new System.Windows.Forms.Label();
+            label3 = new System.Windows.Forms.Label();
+            button1 = new System.Windows.Forms.Button();
+            SuspendLayout();
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(77, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(213, 21);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "OffSync Password Manager™";
+            label1.AutoSize = true;
+            label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            label1.Location = new System.Drawing.Point(127, 9);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(110, 21);
+            label1.TabIndex = 0;
+            label1.Text = "CryptoString™";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(125, 30);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(117, 15);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Version 2024.03.08.01";
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(125, 33);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(117, 15);
+            label2.TabIndex = 1;
+            label2.Text = "Version 2025.01.09.00";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(60, 58);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(250, 15);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Designed by Preston Peek and Joshua Barrows";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(116, 83);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(135, 15);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "Created by Preston Peek";
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(71, 70);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(224, 15);
+            label3.TabIndex = 2;
+            label3.Text = "Designed and Created by D. Preston Peek";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(146, 105);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "OK";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            button1.Location = new System.Drawing.Point(146, 105);
+            button1.Name = "button1";
+            button1.Size = new System.Drawing.Size(75, 23);
+            button1.TabIndex = 4;
+            button1.Text = "OK";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // About
             // 
-            this.AcceptButton = this.button1;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(363, 140);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "About";
-            this.Text = "About";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AcceptButton = button1;
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(363, 140);
+            Controls.Add(button1);
+            Controls.Add(label3);
+            Controls.Add(label2);
+            Controls.Add(label1);
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            Name = "About";
+            Text = "About";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -108,7 +96,6 @@ namespace OffSyncPasswordManager
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button1;
     }
 }

@@ -24,8 +24,8 @@ namespace OffSyncPasswordManager
         public string[] Settings;
 
         private static string keyFile = "encryptedKey.txt";
-        private static string pwordsFile = "encryptedPasswords.txt";
-        private static string exportedFile = "exportedPasswords.txt";
+        private static string pwordsFile = "encryptedStrings.txt";
+        private static string exportedFile = "exportedStrings.txt";
         private static string settingsFile = "settings.txt";
 
         public string keywordFilter = "";
@@ -107,7 +107,7 @@ namespace OffSyncPasswordManager
             if (editing)
             {
                 int index = CredDescriptions.SelectedIndex;
-                string[] encryptedCreds = AesEncryption.EncryptString(CredDesc.Text + "|" + Username.Text + "|" + Original.Text, Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, Master.AuthKey);
+                string[] encryptedCreds = AesEncryption.EncryptString(CredDesc.Text + "|" + Username.Text + "|" + /*Original.Text*/Encrypted.Text, Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, Master.AuthKey);
                 if (filtering)
                 {
                     string cred = FilteredCreds[index];
@@ -132,14 +132,19 @@ namespace OffSyncPasswordManager
             {
                 if (Master.KeyDataNotEmpty())
                 {
-                    if (Original.Text.Equals(""))
+                    //if (Original.Text.Equals(""))
+                    //{
+                    //    Original.Text = GeneratePassword();
+                    //}
+                    if (Encrypted.Text.Equals(""))
                     {
-                        Original.Text = GeneratePassword();
+                        Encrypted.Text = GeneratePassword();
                     }
-                    string[] encryptedCreds = AesEncryption.EncryptString(CredDesc.Text + "|" + Username.Text + "|" + Original.Text, Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, Master.AuthKey);
+                    string[] encryptedCreds = AesEncryption.EncryptString(CredDesc.Text + "|" + Username.Text + "|" + /*Original.Text*/Encrypted.Text, Master.Key, Master.IV, Master.KeySalt, Master.AuthKeySalt, Master.AuthKey);
 
                     AddCredential(encryptedCreds[0], encryptedCreds[4]);
-                    Original.Text = "";
+                    //Original.Text = "";
+                    Encrypted.Text = "";
                     Username.Text = "";
                     CredDesc.Text = "";
 
@@ -209,18 +214,18 @@ namespace OffSyncPasswordManager
         {
             if (!locked)
             {
-                if (Usernames.SelectedIndex == copiedCred && passCopied && !userCopied)
+                //if (Usernames.SelectedIndex == copiedCred && passCopied && !userCopied)
+                //{
+                //    Clipboard.SetText(GetUsername());
+                //    userCopied = true;
+                //}
+                //else
                 {
-                    Clipboard.SetText(GetUsername());
-                    userCopied = true;
-                }
-                else
-                {
-                    if (userCopied)
-                    {
-                        passCopied = false;
-                        userCopied = false;
-                    }
+                    //if (userCopied)
+                    //{
+                    //    passCopied = false;
+                    //    userCopied = false;
+                    //}
                     Clipboard.SetText(GetPassword());
                     copiedCred = Usernames.SelectedIndex;
                     passCopied = true;
@@ -298,7 +303,7 @@ namespace OffSyncPasswordManager
                     FilterCredentials();
                     Settings[1] = "defFilter=" + keywordFilter;
                 }
-                else 
+                else
                 {
                     disableKeywordTrigger = true;
                     UsernameFilter.SelectedItem = "[keyword]";
@@ -307,7 +312,7 @@ namespace OffSyncPasswordManager
                     Settings[1] = "defFilter=" + keywordFilter;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -339,6 +344,7 @@ namespace OffSyncPasswordManager
         {
             UsernameFilter.Items.AddRange(UniqueUsernames.ToArray());
             UsernameFilter.SelectedIndex = 0;
+            UsernameFilter.SelectedItem = "[all]";
         }
 
         private void PopulateCredentials(List<string> credentials)
@@ -542,7 +548,7 @@ namespace OffSyncPasswordManager
             {
                 confirm.Dispose();
             }
-            confirm = new ConfirmationWindow("Clear all passwords?", "Delete all password data?\nThis cannot be undone.");
+            confirm = new ConfirmationWindow("Clear all strings?", "Delete all string data?\nThis cannot be undone.");
             confirm.FormClosed += ClearPasswordsConfirmationClosed;
             confirm.Show();
         }
@@ -560,7 +566,8 @@ namespace OffSyncPasswordManager
 
         private void GenerateButton_Click(object sender, EventArgs e)
         {
-            Original.Text = GeneratePassword();
+            //Original.Text = GeneratePassword();
+            Encrypted.Text = GeneratePassword();
         }
 
         private string GeneratePassword()
@@ -677,9 +684,9 @@ namespace OffSyncPasswordManager
             {
                 StartEditing();
                 int index = -1;
-                if (usernameClicked) 
+                if (usernameClicked)
                 {
-                    index = Usernames.SelectedIndex; 
+                    index = Usernames.SelectedIndex;
                 }
                 else
                 {
@@ -697,23 +704,25 @@ namespace OffSyncPasswordManager
 
                 CredDesc.Text = CredDescriptions.SelectedItem.ToString();
                 Username.Text = Usernames.SelectedItem.ToString();
-                Original.Text = GetPassword();
+                //Original.Text = GetPassword();
+                Encrypted.Text = GetPassword();
             }
         }
 
         private void StartEditing()
         {
             editing = true;
-            EncryptButton.Text = "Update Credential";
+            EncryptButton.Text = "Save";
         }
 
         private void StopEditing()
         {
             editing = false;
-            EncryptButton.Text = "Add Credential";
+            EncryptButton.Text = "Add";
             CredDesc.Text = "";
             Username.Text = "";
-            Original.Text = "";
+            //Original.Text = "";
+            Encrypted.Text = "";
         }
 
         private void clearSelectedCredentialsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -793,7 +802,7 @@ namespace OffSyncPasswordManager
                     }
                     else
                     {
-                        error = new ErrorWindow("Cannot import passwords that were exported using a different master key.");
+                        error = new ErrorWindow("Cannot import strings that were exported using a different master key.");
                         error.ShowDialog();
                         return;
                     }
@@ -873,12 +882,12 @@ namespace OffSyncPasswordManager
 
         private void ViewPasswordButton_MouseDown(object sender, MouseEventArgs e)
         {
-            Original.UseSystemPasswordChar = false;
+            //Original.UseSystemPasswordChar = false;
         }
 
         private void ViewPasswordButton_MouseUp(object sender, MouseEventArgs e)
         {
-            Original.UseSystemPasswordChar = true;
+            //Original.UseSystemPasswordChar = true;
         }
 
         private void UsernameFilter_SelectedIndexChanged(object sender, EventArgs e)
@@ -904,6 +913,11 @@ namespace OffSyncPasswordManager
         {
             Settings settingsWindow = new Settings();
             settingsWindow.ShowDialog();
+        }
+
+        private void ViewPasswordButton_Click(object sender, EventArgs e)
+        {
+            Encrypted.Visible = !Encrypted.Visible;
         }
     }
 }

@@ -31,7 +31,7 @@ namespace OffSyncPasswordManager
         public static string PlainKey = "";
 
         private static string keyFile = "encryptedKey.txt";
-        private static string pwordsFile = "encryptedPasswords.txt";
+        private static string pwordsFile = "encryptedStrings.txt";
 
         public static void InitializeMasterKeyData()
         {

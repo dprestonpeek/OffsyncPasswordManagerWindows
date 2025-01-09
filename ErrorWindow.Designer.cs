@@ -30,44 +30,43 @@ namespace OffSyncPasswordManager
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ErrorWindow));
-            this.ErrorOK = new System.Windows.Forms.Button();
-            this.ErrorMessage = new System.Windows.Forms.TextBox();
-            this.SuspendLayout();
+            ErrorOK = new System.Windows.Forms.Button();
+            ErrorMessage = new System.Windows.Forms.TextBox();
+            SuspendLayout();
             // 
             // ErrorOK
             // 
-            this.ErrorOK.Location = new System.Drawing.Point(146, 90);
-            this.ErrorOK.Name = "ErrorOK";
-            this.ErrorOK.Size = new System.Drawing.Size(75, 23);
-            this.ErrorOK.TabIndex = 2;
-            this.ErrorOK.Text = "OK";
-            this.ErrorOK.UseVisualStyleBackColor = true;
-            this.ErrorOK.Click += new System.EventHandler(this.ErrorOK_Click);
+            ErrorOK.Location = new System.Drawing.Point(146, 90);
+            ErrorOK.Name = "ErrorOK";
+            ErrorOK.Size = new System.Drawing.Size(75, 23);
+            ErrorOK.TabIndex = 2;
+            ErrorOK.Text = "OK";
+            ErrorOK.UseVisualStyleBackColor = true;
+            ErrorOK.Click += ErrorOK_Click;
             // 
             // ErrorMessage
             // 
-            this.ErrorMessage.Location = new System.Drawing.Point(49, 26);
-            this.ErrorMessage.Multiline = true;
-            this.ErrorMessage.Name = "ErrorMessage";
-            this.ErrorMessage.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.ErrorMessage.Size = new System.Drawing.Size(277, 58);
-            this.ErrorMessage.TabIndex = 3;
-            this.ErrorMessage.Text = "Cannot import passwords that were exported using a different master key.";
-            this.ErrorMessage.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            ErrorMessage.Location = new System.Drawing.Point(49, 26);
+            ErrorMessage.Multiline = true;
+            ErrorMessage.Name = "ErrorMessage";
+            ErrorMessage.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            ErrorMessage.Size = new System.Drawing.Size(277, 58);
+            ErrorMessage.TabIndex = 3;
+            ErrorMessage.Text = "Cannot import passwords that were exported using a different master key.";
+            ErrorMessage.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // ErrorWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(363, 140);
-            this.Controls.Add(this.ErrorMessage);
-            this.Controls.Add(this.ErrorOK);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "ErrorWindow";
-            this.Text = "Error!";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(363, 140);
+            Controls.Add(ErrorMessage);
+            Controls.Add(ErrorOK);
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            Name = "ErrorWindow";
+            Text = "Error!";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
