@@ -271,10 +271,12 @@ namespace OffSyncPasswordManager
         {
             try
             {
+                // Parse out settings data
                 Settings = new string[2];
 
                 if (File.Exists(settingsFile))
                 {
+                    // Load previous data
                     string[] settings = File.ReadAllLines(settingsFile);
                     for (int i = 0; i < settings.Length; i++)
                     {
@@ -283,12 +285,15 @@ namespace OffSyncPasswordManager
                 }
                 else
                 {
+                    // Initialize with default settings
                     Settings[0] = "timeout=60";
                     Settings[1] = "defFilter=All";
                     SaveSettings();
                 }
 
                 defLockTime = int.Parse(Settings[0].Split('=')[1]);
+
+
                 string filter = Settings[1].Split('=')[1];
                 if (UsernameFilter.Items.Contains(filter))
                 {
@@ -301,7 +306,7 @@ namespace OffSyncPasswordManager
                 else 
                 {
                     disableKeywordTrigger = true;
-                    UsernameFilter.SelectedItem = "[keyword]";
+                    UsernameFilter.SelectedItem = "[all]";
                     keywordFilter = filter;
                     FilterCredentials();
                     Settings[1] = "defFilter=" + keywordFilter;
