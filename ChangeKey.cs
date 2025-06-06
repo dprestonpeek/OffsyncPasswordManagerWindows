@@ -39,10 +39,5 @@ namespace OffSyncPasswordManager
                 }
             }
         }
-
-        private void ChangeKey_FormClosed(object sender, FormClosedEventArgs e)
-        {
-
-        }
     }
 }

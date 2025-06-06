@@ -67,34 +67,52 @@ namespace OffSyncPasswordManager
             InitializeCredentials();
             InitializeFilter();
             InitializeSettings();
-
-            Usernames.MouseWheel += Usernames_MouseWheel;
-            CredDescriptions.MouseWheel += CredDescriptions_MouseWheel;
         }
 
-        private void CredDescriptions_MouseWheel(object sender, MouseEventArgs e)
+        public string GetUsername()
         {
-            //if (e.Delta > 0)
-            //{
-            //    Usernames.TopIndex = CredDescriptions.TopIndex - 1;
-            //}
-            //else
-            //{
-            //    int visibleItems = CredDescriptions.ClientSize.Height / CredDescriptions.ItemHeight;
-            //    Usernames.TopIndex = CredDescriptions.TopIndex + 1;
-            //}
+            return Usernames.SelectedItem.ToString();
         }
 
-        private void Usernames_MouseWheel(object sender, MouseEventArgs e)
+        /// <summary>
+        /// Copies the selected account username to clipboard if the app is not locked
+        /// </summary>
+        public void CopyCredentials()
         {
-            //if (e.Delta > 0)
-            //{
-            //    CredDescriptions.TopIndex = Usernames.TopIndex - 1;
-            //}
-            //else
-            //{
-            //    CredDescriptions.TopIndex = Usernames.TopIndex + 1;
-            //}
+            if (!locked)
+            {
+                if (Usernames.SelectedIndex == copiedCred && passCopied && !userCopied)
+                {
+                    Clipboard.SetText(GetUsername());
+                    userCopied = true;
+                }
+                else
+                {
+                    if (userCopied)
+                    {
+                        passCopied = false;
+                        userCopied = false;
+                    }
+                    Clipboard.SetText(GetPassword());
+                    copiedCred = Usernames.SelectedIndex;
+                    passCopied = true;
+                }
+            }
+        }
+
+        public string GetPassword()
+        {
+            if (!locked)
+            {
+                return DecryptPassword();
+            }
+            return "";
+        }
+
+        public void SaveSettings()
+        {
+            File.WriteAllLines(settingsFile, Settings);
+            InitializeSettings();
         }
 
         /// <summary>
@@ -178,6 +196,7 @@ namespace OffSyncPasswordManager
         {
             return DecryptPassword(Usernames.SelectedIndex);
         }
+
         private string DecryptPassword(int index)
         {
             if (Master.KeyDataNotEmpty() && Usernames.SelectedItems.Count == 1)
@@ -197,39 +216,6 @@ namespace OffSyncPasswordManager
             return "";
         }
 
-        public string GetUsername()
-        {
-            return Usernames.SelectedItem.ToString();
-        }
-
-        /// <summary>
-        /// Copies the selected account username to clipboard if the app is not locked
-        /// </summary>
-        public void CopyCredentials()
-        {
-            if (!locked)
-            {
-                if (Usernames.SelectedIndex == copiedCred && passCopied && !userCopied)
-                {
-                    Clipboard.SetText(GetUsername());
-                    userCopied = true;
-                }
-                else
-                {
-                    if (userCopied)
-                    {
-                        passCopied = false;
-                        userCopied = false;
-                    }
-                    Clipboard.SetText(GetPassword());
-                    copiedCred = Usernames.SelectedIndex;
-                    passCopied = true;
-                }
-                //getPassword = true;
-                //wait = true;
-            }
-        }
-
         /// <summary>
         /// Copies the selected account password to clipboard if the app is not locked
         /// </summary>
@@ -239,15 +225,6 @@ namespace OffSyncPasswordManager
             {
                 Clipboard.SetText(GetPassword());
             }
-        }
-
-        public string GetPassword()
-        {
-            if (!locked)
-            {
-                return DecryptPassword();
-            }
-            return "";
         }
 
         private string[] DecryptCredentials(string encryptedInfo)
@@ -314,16 +291,12 @@ namespace OffSyncPasswordManager
             }
             catch(Exception ex)
             {
-
+                error = new ErrorWindow("An error occured loading the settings file.");
+                error.ShowDialog();
+                return;
             }
             initKeyword = true;
             disableKeywordTrigger = false;
-        }
-
-        public void SaveSettings()
-        {
-            File.WriteAllLines(settingsFile, Settings);
-            InitializeSettings();
         }
 
         /// <summary>

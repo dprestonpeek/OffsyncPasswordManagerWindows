@@ -176,11 +176,6 @@ namespace OffSyncPasswordManager
             {
                 return derivator.GetBytes(PasswordByteSize);
             }
-
-            //byte[] derivator = KeyDerivation.Pbkdf2(
-            //    password, passwordSalt, KeyDerivationPrf.HMACSHA256,
-            //    PasswordIterationCount, PasswordByteSize);
-            //return derivator;
         }
 
         private static byte[] GenerateRandomBytes(int numberOfBytes)

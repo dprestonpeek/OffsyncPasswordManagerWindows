@@ -34,7 +34,7 @@ namespace OffSyncPasswordManager
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
             label4 = new System.Windows.Forms.Label();
-            button1 = new System.Windows.Forms.Button();
+            OKButton = new System.Windows.Forms.Button();
             pictureBox1 = new System.Windows.Forms.PictureBox();
             label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -77,15 +77,15 @@ namespace OffSyncPasswordManager
             label4.TabIndex = 3;
             label4.Text = "Created by Peek Velocity";
             // 
-            // button1
+            // OKButton
             // 
-            button1.Location = new System.Drawing.Point(146, 222);
-            button1.Name = "button1";
-            button1.Size = new System.Drawing.Size(75, 23);
-            button1.TabIndex = 4;
-            button1.Text = "OK";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            OKButton.Location = new System.Drawing.Point(146, 222);
+            OKButton.Name = "OKButton";
+            OKButton.Size = new System.Drawing.Size(75, 23);
+            OKButton.TabIndex = 4;
+            OKButton.Text = "OK";
+            OKButton.UseVisualStyleBackColor = true;
+            OKButton.Click += OKButton_Click;
             // 
             // pictureBox1
             // 
@@ -109,13 +109,13 @@ namespace OffSyncPasswordManager
             // 
             // About
             // 
-            AcceptButton = button1;
+            AcceptButton = OKButton;
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(363, 282);
             Controls.Add(label5);
             Controls.Add(pictureBox1);
-            Controls.Add(button1);
+            Controls.Add(OKButton);
             Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -135,7 +135,7 @@ namespace OffSyncPasswordManager
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button OKButton;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label5;
     }

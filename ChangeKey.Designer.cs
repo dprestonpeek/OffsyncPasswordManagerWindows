@@ -122,7 +122,6 @@ namespace OffSyncPasswordManager
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ChangeKey";
             this.Text = "Change Master Key";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ChangeKey_FormClosed);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

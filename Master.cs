@@ -27,7 +27,6 @@ namespace OffSyncPasswordManager
         public static string KeySalt = "";
         public static string AuthKeySalt = "";
         public static string AuthKey = "";
-
         public static string PlainKey = "";
 
         private static string keyFile = "encryptedKey.txt";
